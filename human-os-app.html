@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人性OS｜Human OS - Offline Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1A2B5F;
+            --gold: #C9960C;
+            --teal: #0A7A72;
+            --white: #FFFFFF;
+            --light-bg: #F9F8F6;
+            --border: #E8E6E0;
+            --text-dark: #2C3E50;
+            --text-light: #6B7280;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Arial', sans-serif;
+            background: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 3px solid var(--gold);
+            padding-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            color: var(--navy);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            color: var(--teal);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .header .description {
+            font-size: 16px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Navigation */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .nav-btn {
+            padding: 25px 20px;
+            background: var(--white);
+            border: 2px solid var(--navy);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+            transition: all 0.3s ease;
+            text-align: center;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+
+        .nav-btn:hover {
+            background: var(--navy);
+            color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(26, 43, 95, 0.15);
+        }
+
+        .nav-btn.active {
+            background: var(--navy);
+            color: var(--gold);
+            box-shadow: 0 8px 24px rgba(26, 43, 95, 0.2);
+        }
+
+        /* Screen Containers */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Question Card */
+        .question-container {
+            background: var(--light-bg);
+            border-left: 5px solid var(--gold);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .q-number {
+            font-size: 14px;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .q-content {
+            margin-bottom: 25px;
+        }
+
+        .q-content h3 {
+            font-size: 22px;
+            color: var(--navy);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .q-content .zh {
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .q-content .en {
+            color: var(--text-light);
+            font-size: 16px;
+            font-style: italic;
+        }
+
+        .q-info {
+            background: var(--white);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-left: 3px solid var(--teal);
+        }
+
+        .q-info strong {
+            color: var(--teal);
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Answer Options */
+        .options-container {
+            margin-bottom: 25px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 15px;
+        }
+
+        .option:hover {
+            border-color: var(--gold);
+            background: rgba(201, 150, 12, 0.05);
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .option.selected {
+            background: rgba(10, 122, 114, 0.1);
+            border-color: var(--teal);
+        }
+
+        /* Likert Scale */
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .likert-scale .scale-item {
+            text-align: center;
+            flex: 1;
+            min-width: 60px;
+        }
+
+        .likert-scale .scale-item input[type="radio"] {
+            display: block;
+            margin: 0 auto 10px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .likert-scale .scale-label {
+            font-size: 14px;
+            color: var(--text-light);
+            display: block;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 30px;
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--teal), var(--gold));
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 18px 40px;
+            font-size: 19px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 43, 95, 0.25);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--teal);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--teal);
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-small {
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+
+        /* Maps Display */
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .map-card {
+            background: var(--light-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(201, 150, 12, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .map-card.expanded {
+            grid-column: 1 / -1;
+        }
+
+        .map-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .map-content {
+            display: none;
+        }
+
+        .map-card.expanded .map-content {
+            display: block;
+        }
+
+        .map-items {
+            list-style: none;
+        }
+
+        .map-items li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-items li:last-child {
+            border-bottom: none;
+        }
+
+        .map-label {
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .map-value {
+            color: var(--teal);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Collapsible Section */
+        .collapsible {
+            background: var(--light-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--navy);
+        }
+
+        .collapsible-header:hover {
+            background: rgba(201, 150, 12, 0.1);
+        }
+
+        .collapsible-icon {
+            color: var(--gold);
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible.active .collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .collapsible.active .collapsible-content {
+            max-height: 1000px;
+            padding: 0 20px 20px 20px;
+        }
+
+        /* Daily Update */
+        .daily-box {
+            background: linear-gradient(135deg, rgba(26, 43, 95, 0.1), rgba(10, 122, 114, 0.1));
+            border-left: 5px solid var(--gold);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .daily-box h3 {
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .daily-box .content {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 6px;
+            line-height: 1.8;
+            font-size: 18px;
+        }
+
+        /* Summary */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--gold);
+            background: rgba(201, 150, 12, 0.05);
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .summary-desc {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .empty-state h3 {
+            font-size: 28px;
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .likert-scale {
+                gap: 5px;
+            }
+
+            .likert-scale .scale-item {
+                min-width: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>人性OS</h1>
+            <div class="subtitle">Human OS | Bilingual Human Understanding</div>
+            <p class="description">透過100個雙語問題，建立一張完整的人性生成地圖，幫助您理解自己、理解他人，並找到下一步的更新策略。Build a complete Human Generation Map to understand yourself, understand others, and discover your next upgrade.</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="switchScreen('home')">①<br>開始診斷<br>Start Assessment</button>
+            <button class="nav-btn" onclick="switchScreen('questions')">②<br>人性100題<br>100 Questions</button>
+            <button class="nav-btn" onclick="switchScreen('all-questions')">③<br>完整題庫<br>Full Library</button>
+            <button class="nav-btn" onclick="switchScreen('modules')">④<br>17個模組<br>17 Modules</button>
+            <button class="nav-btn" onclick="switchScreen('mapping')">⑤<br>題目對應<br>Q-Module Map</button>
+            <button class="nav-btn" onclick="switchScreen('map')">⑥<br>更新地圖<br>Update Map</button>
+            <button class="nav-btn" onclick="switchScreen('capability')">⑦<br>能力地圖<br>Capability Map</button>
+            <button class="nav-btn" onclick="switchScreen('daily')">⑧<br>每日更新<br>Daily Upgrade</button>
+            <button class="nav-btn" onclick="switchScreen('history')">⑨<br>更新紀錄<br>Progress History</button>
+        </div>
+
+        <!-- Screen 1: Home -->
+        <div id="home" class="screen active">
+            <div class="summary-grid">
+                <div class="summary-card highlight">
+                    <div class="summary-label">完成進度</div>
+                    <div class="summary-value" id="homeProgress">0/100</div>
+                    <div class="summary-desc">Questions Completed</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">總分</div>
+                    <div class="summary-value" id="homeScore">0</div>
+                    <div class="summary-desc">Total Score</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">核心需求</div>
+                    <div class="summary-value" id="coreDimension">-</div>
+                    <div class="summary-desc">Primary Need</div>
+                </div>
+            </div>
+
+            <div class="daily-box">
+                <h3>🎯 您的下一步</h3>
+                <div class="content" id="nextStep">完成問卷診斷後，將獲得個性化的成長建議和每日行動計劃。</div>
+            </div>
+
+            <div class="daily-box">
+                <h3>📊 您的優勢與限制</h3>
+                <div class="content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <strong style="color: #0A7A72;">Top 3 Strengths</strong>
+                            <ul id="strengthsList" style="margin-top: 10px; padding-left: 20px;">
+                                <li>完成診斷後顯示</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: #C9960C;">Top 3 Bottlenecks</strong>
+                            <ul id="bottlenecksList" style="margin-top: 10px; padding-left: 20px;">
+                                <li>完成診斷後顯示</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="switchScreen('questions')">開始100題診斷 → Start Assessment</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Questions -->
+        <div id="questions" class="screen">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text"><span id="progressText">0/100</span> 已完成 | Completed</div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary btn-small" onclick="previousQuestion()">← 上一題 Previous</button>
+                <button class="btn btn-secondary btn-small" id="nextBtn" onclick="nextQuestion()">下一題 Next →</button>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="submitAssessment()">完成診斷 Submit Assessment</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: All Questions Library -->
+        <div id="all-questions" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">📚 完整題庫 | Full Question Library</h2>
+            <div style="background: #F9F8F6; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #C9960C;">
+                <p style="font-size: 16px; color: #2C3E50;"><strong>共100題 | 100 Questions Total</strong></p>
+                <p style="font-size: 14px; color: #6B7280; margin-top: 10px;">點擊每個題目展開查看：功能、本質、新舊模式對比 | Click to expand each question to view: Function, Purpose, Old & New Models</p>
+            </div>
+            <div id="libraryContainer"></div>
+        </div>
+
+        <!-- Screen 4: 17 Modules -->
+        <div id="modules" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">📚 17個更新模組 | 17 Upgrade Modules</h2>
+            <div style="background: #F9F8F6; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #C9960C;">
+                <p style="font-size: 16px; color: #2C3E50;"><strong>人性OS的核心升級引擎 | Core Upgrade Engine</strong></p>
+                <p style="font-size: 14px; color: #6B7280; margin-top: 10px;">從100題答案→17個模組分析→找到最大槓桿→每日微小行動→終身更新能力</p>
+            </div>
+            <div id="modulesContainer"></div>
+        </div>
+
+        <!-- Screen 5: Question-Module Mapping -->
+        <div id="mapping" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">🔗 100題對應模組 | Question-Module Mapping</h2>
+            <div style="background: #F9F8F6; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 5px solid #0A7A72;">
+                <p style="font-size: 16px; color: #2C3E50;"><strong>每個題目對應的更新模組 | Which module does each question help?</strong></p>
+                <p style="font-size: 14px; color: #6B7280; margin-top: 10px;">點擊展開查看題目與模組的對應關係</p>
+            </div>
+            <div id="mappingContainer"></div>
+        </div>
+
+        <!-- Screen 6: Maps -->
+        <div id="map" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">您的人性生成地圖</h2>
+            <div id="mapsContainer" class="maps-grid"></div>
+        </div>
+
+        <!-- Screen 7: Capability -->
+        <div id="capability" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">能力升級地圖</h2>
+            <div id="capabilityContainer"></div>
+        </div>
+
+        <!-- Screen 7: Daily -->
+        <div id="daily" class="screen">
+            <div style="background: #F9F8F6; border-radius: 8px; padding: 30px; margin-bottom: 30px;">
+                <h2 style="color: #1A2B5F; margin-bottom: 20px; font-size: 28px;">📅 今日升級計劃</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div class="daily-box" style="margin: 0;">
+                        <h3 style="margin: 0 0 15px 0;">🎯 今天的問題</h3>
+                        <div class="content" style="margin: 0; font-weight: 600;">請完成100題診斷</div>
+                    </div>
+                    <div class="daily-box" style="margin: 0;">
+                        <h3 style="margin: 0 0 15px 0;">💡 今天的升級語言</h3>
+                        <div class="content" style="margin: 0; font-weight: 600;">每日一句智慧句子</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div class="daily-box">
+                    <h3 style="margin-top: 0;">能力</h3>
+                    <div class="content" style="margin-bottom: 0;">Today's Capability</div>
+                </div>
+                <div class="daily-box">
+                    <h3 style="margin-top: 0;">反思</h3>
+                    <div class="content" style="margin-bottom: 0;">Today's Reflection</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 8: History -->
+        <div id="history" class="screen">
+            <h2 style="color: #1A2B5F; margin-bottom: 30px; font-size: 28px;">📈 更新紀錄</h2>
+            <div id="historyContainer" class="empty-state">
+                <h3>還沒有診斷記錄</h3>
+                <p>完成一次完整的100題診斷，開始追蹤您的成長紀錄</p>
+                <button class="btn btn-primary" onclick="switchScreen('questions')">開始診斷</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ Text-to-Speech Function ============
+        function speakText(text) {
+            // Cancel any ongoing speech
+            window.speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9; // Speed between 0.85-0.95
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Stop speech
+        function stopSpeech() {
+            window.speechSynthesis.cancel();
+        }
+
+        // ============ 17 Upgrade Modules ============
+        const modules = [
+            {
+                id: "M01",
+                name: "需求系統",
+                en: "Need System",
+                icon: "🎯",
+                objective: "找出真正需求，而不是表面問題",
+                detailedDesc: "每個人的行為都源自於未被滿足的需求。安全、自由、成就、愛、歸屬、尊重、影響力、意義——這8大需求驅動著我們的選擇。這個模組幫助您找到那些隱藏在問題背後、一直無法滿足的深層需求。",
+                updateStrategy: "不要直接解決問題，先滿足真正需求。當需求被正確識別和滿足，表面問題通常會自然消解。",
+                questions: [3, 16, 18, 19, 20, 36, 49, 59, 91, 92],
+                relatedThemes: ["自我認知", "人際關係", "決策模式"],
+                action: "列出您最渴望滿足的三個需求，並思考當前生活中是否有地方正在滿足或忽略它們"
+            },
+            {
+                id: "M02",
+                name: "價值排序",
+                en: "Value System",
+                icon: "💎",
+                objective: "建立穩定的人生優先順序",
+                detailedDesc: "您的價值觀決定了什麼對您最重要。家庭、健康、自由、信仰、金錢、成長、服務——這些價值的排序直接影響您每天的決定。清晰的價值排序就像有了人生的指南針。",
+                updateStrategy: "讓每天的行動和價值一致。當行動與價值一致時，人生會感到有意義；反之則會感到內疚和迷茫。",
+                questions: [1, 2, 5, 17, 31, 43, 48, 60, 89, 95],
+                relatedThemes: ["人生方向", "決策系統", "身份認同"],
+                action: "排序您人生中最重要的5個價值，然後檢視最近一周的時間投入是否反映了這個排序"
+            },
+            {
+                id: "M03",
+                name: "信念系統",
+                en: "Belief System",
+                icon: "🧠",
+                objective: "更新限制信念，建立新的世界觀",
+                detailedDesc: "您對世界的信念形塑了您的現實。『我不夠好』『有錢的人不好』『不能犯錯』——這些根深蒂固的信念像操作系統一樣運行著您的人生。這個模組幫助您識別哪些信念在限制您，然後用新證據來更新它們。",
+                updateStrategy: "不是否定舊信念，而是提供新的證據。每一次的成功體驗、每一次的小勝利都是打破舊信念的新證據。",
+                questions: [6, 7, 8, 41, 42, 76, 79, 86, 87, 100],
+                relatedThemes: ["世界模型", "身份系統", "成長系統"],
+                action: "找出一個一直限制您的核心信念，列出3個已經證明它不完全真實的反例"
+            },
+            {
+                id: "M04",
+                name: "世界模型",
+                en: "World Model",
+                icon: "🌍",
+                objective: "理解您如何解釋世界和他人",
+                detailedDesc: "每個人都有一套獨特的世界模型——對世界是危險還是安全的理解，對他人是好惡還是中立的判斷，對努力是有用還是徒勞的信念。這個模型決定了您面對同樣事件時的解讀方式。",
+                updateStrategy: "增加不同的經驗，建立更完整、更精準的模型。真實世界往往比我們想象的更複雜、更微妙。",
+                questions: [7, 8, 34, 35, 41, 42, 76, 79, 97],
+                relatedThemes: ["信念系統", "決策系統", "情緒系統"],
+                action: "想一個最近發生的負面事件，用三種不同角度重新解讀它，看會產生什麼不同的理解"
+            },
+            {
+                id: "M05",
+                name: "身份系統",
+                en: "Identity System",
+                icon: "🪞",
+                objective: "建立新的身份認同",
+                detailedDesc: "『我是受害者』『我是領導者』『我是失敗者』——您如何定義自己決定了您能成為什麼。身份是最高層級的自我組織。改變行為前，先改變身份，會帶來內在一致的外在改變。",
+                updateStrategy: "先改身份，再改行為。例如：不是『我要運動』，而是『我是會照顧健康的人』。",
+                questions: [14, 15, 58, 60, 62, 63, 84, 89, 100],
+                relatedThemes: ["信念系統", "人生方向", "決策系統"],
+                action: "選擇三個您想要的新身份，然後用具體行動每天驗證這個身份。例如『我是終身學習者』→每天學習"
+            },
+            {
+                id: "M06",
+                name: "情緒系統",
+                en: "Emotion System",
+                icon: "❤️",
+                objective: "學會辨識情緒訊號，不再被情緒控制",
+                detailedDesc: "焦慮、憤怒、羞愧、孤單——情緒不是敵人，而是身體發來的訊號。焦慮說『有東西需要您關注』，憤怒說『有邊界被越過了』。這個模組教您讀懂情緒的語言。",
+                updateStrategy: "不要壓抑情緒，分析情緒正在提醒什麼。每一個情緒都攜帶著寶貴的信息。",
+                questions: [4, 44, 45, 46, 47, 48, 49, 61, 68],
+                relatedThemes: ["決策系統", "世界模型", "能力系統"],
+                action: "今天當一個強烈情緒出現時，停下來問自己：『這個情緒在提醒我什麼？它想保護什麼？』"
+            },
+            {
+                id: "M07",
+                name: "決策系統",
+                en: "Decision System",
+                icon: "⚖️",
+                objective: "改善決策品質",
+                detailedDesc: "您根據情緒做決定還是根據價值做決定？根據他人期待還是根據自己的證據？這個模組建立一套清晰的決策流程：識別真實需求→理清您的價值→權衡選項→根據證據決定。",
+                updateStrategy: "建立固定的決策流程。即使在同樣的情況下，使用相同的思考框架，您的決定會更一致、更有力。",
+                questions: [9, 10, 31, 32, 33, 34, 35, 43, 85],
+                relatedThemes: ["價值排序", "情緒系統", "能力系統"],
+                action: "回顧最近一個重要決定。用『需求→價值→選項→證據→決定』的流程重新分析一次"
+            },
+            {
+                id: "M08",
+                name: "習慣系統",
+                en: "Habit System",
+                icon: "⚙️",
+                objective: "建立支持性的新習慣，改變自動化行為",
+                detailedDesc: "習慣是自動化的行為。好習慣像自動導航，壞習慣像自動崩潰。這個模組不是靠意志力，而是通過改變『觸發→反應』的迴路，讓新行為變成自動。",
+                updateStrategy: "降低開始成本，增加立即回饋。小到不會失敗的習慣，重複做一個月就會自動化。",
+                questions: [11, 12, 81, 82, 83, 90],
+                relatedThemes: ["環境系統", "情緒系統", "能力系統"],
+                action: "挑一個想建立的習慣，設計一個『低開始成本』版本（例如不是『跑步一小時』而是『穿上運動鞋』），每天重複"
+            },
+            {
+                id: "M09",
+                name: "環境系統",
+                en: "Environment System",
+                icon: "🏠",
+                objective: "建立支持性的環境",
+                detailedDesc: "您的環境影響您的行為。家人、朋友、手機、工作、居住空間、網路社群——這些環境因素時時刻刻在影響您。與其用意志力對抗環境，不如先改變環境。",
+                updateStrategy: "先改環境，再改意志力。一個好環境可以讓正確的行為變成自動選擇。",
+                questions: [13, 16, 18, 52, 55, 57, 70],
+                relatedThemes: ["習慣系統", "人生方向", "關係系統"],
+                action: "審視您一天中最多時間的地方（家、辦公室、手機）。哪些環境因素正在支持或阻礙您的目標？如何改變一個因素？"
+            },
+            {
+                id: "M10",
+                name: "能力系統",
+                en: "Capability System",
+                icon: "⚡",
+                objective: "找出真正能力缺口，建立能力節點",
+                detailedDesc: "表達能力、溝通能力、財務能力、健康能力、學習能力、管理能力——真正的成長不是激勵，而是建立能力節點。當您具備了某項能力，整個世界會為您打開新的門。",
+                updateStrategy: "不是一直激勵，而是建立具體的能力節點。識別『我這方面缺什麼技能』，然後有系統地學習。",
+                questions: [45, 53, 77, 78, 80, 82, 88, 90, 96],
+                relatedThemes: ["成長系統", "習慣系統", "決策系統"],
+                action: "列出您現在最想發展的三項能力。對每一項，找一個導師、一本書、或一個課程來系統學習"
+            },
+            {
+                id: "M11",
+                name: "合作系統",
+                en: "Collaboration System",
+                icon: "🤝",
+                objective: "建立信任與有效合作能力",
+                detailedDesc: "沒有人能單獨成功。合作能力包括信任建立、清晰溝通、承諾兌現、衝突管理、互惠給予。這個模組幫助您理解如何與他人構建可靠的互動。",
+                updateStrategy: "每一次的小承諾都兌現，逐漸建立信任。信任是最昂貴的資源，但也是最有價值的投資。",
+                questions: [25, 26, 27, 28, 51, 65, 66, 67, 72, 73, 93, 99],
+                relatedThemes: ["關係系統", "決策系統", "情緒系統"],
+                action: "想起一個您信任的人。列出他們在過去如何通過言行一致、承諾兌現等建立了您的信任"
+            },
+            {
+                id: "M12",
+                name: "關係系統",
+                en: "Relationship System",
+                icon: "💑",
+                objective: "改善最重要的人際關係",
+                detailedDesc: "家庭、伴侶、友誼、職場關係——我們最大的快樂和痛苦都來自於人際關係。這個模組幫助您建立更健康、更有力量的關係模式。",
+                updateStrategy: "從改變自己開始。當您改變了應對方式，對方通常也會改變。",
+                questions: [16, 17, 18, 25, 27, 50, 52, 55, 68, 70, 95],
+                relatedThemes: ["合作系統", "溝通能力", "需求系統"],
+                action: "選一段重要關係。寫下您想要改變的互動模式，然後想一個具體的新方式來回應對方"
+            },
+            {
+                id: "M13",
+                name: "人生方向",
+                en: "Mission System",
+                icon: "🚀",
+                objective: "找到人生使命和長期方向",
+                detailedDesc: "什麼值得您投入一生？這個問題連接了您的深層渴望與實際行動。人生方向不是一個目標，而是一個方向——每一步都往那個方向走，而不必完全確定終點。",
+                updateStrategy: "把大使命分解成年度目標、季度裡程碑、月度任務。每一小步都是驗證方向是否正確的機會。",
+                questions: [20, 29, 32, 60, 74, 91, 92, 94],
+                relatedThemes: ["身份系統", "價值排序", "行動系統"],
+                action: "完成這個句子：『我想把人生投入於...』。不需要完美答案，但要有初步的方向"
+            },
+            {
+                id: "M14",
+                name: "成長系統",
+                en: "Growth System",
+                icon: "🌱",
+                objective: "建立持續更新能力，成為『會成長的人』",
+                detailedDesc: "真正的成長不是擁有更多答案，而是擁有更好的更新機制。這個模組教您如何像一個學習型生物系統一樣，不斷感知→反思→調整→更新。",
+                updateStrategy: "固定反思。每日反思找到改進點，每週總結提煉經驗，每月回顧調整策略，每季度升級理解。",
+                questions: [45, 76, 77, 78, 79, 80, 87, 88, 90, 98],
+                relatedThemes: ["信念系統", "更新系統", "槓桿系統"],
+                action: "建立一個每日15分鐘的反思習慣。問自己：『今天我學到什麼？下次怎麼做更好？』"
+            },
+            {
+                id: "M15",
+                name: "槓桿系統",
+                en: "Leverage System",
+                icon: "🎯",
+                objective: "找到最值得優先更新的一個節點",
+                detailedDesc: "不是所有改變都有同樣的威力。有些改變會觸發一系列連鎖反應。睡眠好了，情緒好、決策好、體能好。找到最大槓桿，一個改變會帶動整個系統。",
+                updateStrategy: "分析100題的答案，找出重複出現最多次的限制點。通常改變那一個點，會帶動3-5個其他維度的改變。",
+                questions: [],
+                relatedThemes: ["所有模組"],
+                action: "看您的診斷結果。哪一個限制如果被打破，會對您其他方面產生最大影響？從那裡開始"
+            },
+            {
+                id: "M16",
+                name: "行動系統",
+                en: "Action System",
+                icon: "✅",
+                objective: "把理解變成每日可執行的微小行動",
+                detailedDesc: "理解不等於改變。這個模組把前面15個模組的洞察轉化成『今天我要做什麼』。關鍵是『小到不會失敗』，以及『立即看到成果』。",
+                updateStrategy: "設計一個『最小可行行動』——今天就能開始，不需要完美條件，5-15分鐘就能完成的行動。",
+                questions: [],
+                relatedThemes: ["習慣系統", "環境系統", "能力系統"],
+                action: "根據您的診斷，設計一個『今天就能開始』的微小行動。例如：『10分鐘冥想』『給一個人發訊息』『記錄一個小勝利』"
+            },
+            {
+                id: "M17",
+                name: "更新系統",
+                en: "Update System",
+                icon: "🔄",
+                objective: "建立終身更新能力",
+                detailedDesc: "真正的成功不是達成一個目標，而是建立一個能持續適應、持續學習、持續創造價值的人生系統。這個模組把所有17個模組連接成一個閉環的、不斷進化的系統。",
+                updateStrategy: "每月重新回答100題的核心題目，比較哪些答案改變了。哪些價值排序更新了？哪些信念打破了？哪些能力提升了？",
+                questions: [],
+                relatedThemes: ["所有模組"],
+                action: "設定每月的『更新日』。用表格記錄：『這個月，我在哪5個方面有進展？哪5個方面還需要調整？'"
+            }
+        ];
+
+        // Question-Module Mapping
+        const questionModuleMap = {
+            1: ["M02"],
+            2: ["M02"],
+            3: ["M01", "M07"],
+            4: ["M06"],
+            5: ["M02"],
+            6: ["M03"],
+            7: ["M03", "M04"],
+            8: ["M03", "M04"],
+            9: ["M07"],
+            10: ["M07"],
+            11: ["M08"],
+            12: ["M08"],
+            13: ["M09"],
+            14: ["M05"],
+            15: ["M05"],
+            16: ["M01", "M09", "M12"],
+            17: ["M02", "M12"],
+            18: ["M01", "M09", "M12"],
+            19: ["M01"],
+            20: ["M01", "M13"],
+            25: ["M11", "M12"],
+            26: ["M11"],
+            27: ["M11", "M12"],
+            28: ["M11"],
+            29: ["M13"],
+            31: ["M02", "M07"],
+            32: ["M07", "M13"],
+            33: ["M07"],
+            34: ["M04", "M07"],
+            35: ["M04", "M07"],
+            36: ["M01"],
+            41: ["M03", "M04"],
+            42: ["M03", "M04"],
+            43: ["M02", "M07"],
+            44: ["M06"],
+            45: ["M06", "M10"],
+            46: ["M06"],
+            47: ["M06"],
+            48: ["M02", "M06"],
+            49: ["M01", "M06"],
+            50: ["M12"],
+            51: ["M06", "M11"],
+            52: ["M09", "M12"],
+            53: ["M06", "M10"],
+            55: ["M09", "M12"],
+            57: ["M09"],
+            58: ["M05"],
+            59: ["M01"],
+            60: ["M02", "M05", "M13"],
+            61: ["M06"],
+            62: ["M05"],
+            63: ["M05"],
+            65: ["M11"],
+            66: ["M11"],
+            67: ["M11"],
+            68: ["M06", "M12"],
+            70: ["M09", "M12"],
+            72: ["M11"],
+            73: ["M11"],
+            74: ["M13"],
+            76: ["M03", "M14"],
+            77: ["M14"],
+            78: ["M14"],
+            79: ["M03", "M14"],
+            80: ["M10", "M14"],
+            81: ["M08"],
+            82: ["M08", "M10"],
+            83: ["M08"],
+            84: ["M05"],
+            85: ["M07"],
+            86: ["M03"],
+            87: ["M03", "M14"],
+            88: ["M10", "M14"],
+            89: ["M02", "M05"],
+            90: ["M08", "M10", "M14"],
+            91: ["M01", "M13"],
+            92: ["M01"],
+            93: ["M11"],
+            94: ["M13"],
+            95: ["M02", "M12"],
+            96: ["M10"],
+            97: ["M04"],
+            98: ["M14"],
+            99: ["M11"],
+            100: ["M03", "M05"]
+        };
+
+        // ============ Data Structure ============
+        let questions = [
+            {
+                id: 1,
+                zh: "您最常感到的情緒是什麼？",
+                en: "What emotion do you feel most often?",
+                type: "single",
+                function: "情緒狀態 | Emotional State",
+                purpose: "理解核心情緒模式 | Identify emotional patterns",
+                oldModel: "好就好，壞就壞 | Binary feeling",
+                newModel: "了解情緒的根源和模式 | Understand emotional sources",
+                options: ["喜悅 Joy", "平靜 Peace", "焦慮 Anxiety", "悲傷 Sadness", "中立 Neutral"],
+                dimension: "emotion"
+            },
+            {
+                id: 2,
+                zh: "您對未來最擔心的是？",
+                en: "What concerns you most about the future?",
+                type: "single",
+                function: "安全感來源 | Security sense",
+                purpose: "識別核心恐懼 | Identify core fears",
+                oldModel: "只是害怕 | Just afraid",
+                newModel: "理解並轉化恐懼 | Understand and transform",
+                options: ["金錢 Money", "健康 Health", "關係 Relationships", "工作 Career", "失控 Loss of control"],
+                dimension: "security"
+            },
+            {
+                id: 3,
+                zh: "在困難時，您通常的反應是？",
+                en: "How do you typically respond to difficulties?",
+                type: "single",
+                function: "應對模式 | Coping mechanism",
+                purpose: "了解抗壓能力 | Assess resilience",
+                oldModel: "逃避或對抗 | Escape or fight",
+                newModel: "主動創造解決方案 | Actively create solutions",
+                options: ["尋求幫助 Seek help", "獨自解決 Solve alone", "逃避 Avoid", "深呼吸冷靜 Calm down", "尋找機會 Find opportunity"],
+                dimension: "resilience"
+            },
+            {
+                id: 4,
+                zh: "您對自己最不滿意的特質是？",
+                en: "Which trait are you most dissatisfied with?",
+                type: "single",
+                function: "自我覺察 | Self-awareness",
+                purpose: "找到成長槓桿 | Identify leverage points",
+                oldModel: "自我批評 | Self-criticism",
+                newModel: "把弱點轉化為超能力 | Transform weakness to power",
+                options: ["不夠自信 Not confident", "缺乏執行力 Lack execution", "過度完美 Too perfect", "太容易放棄 Too quick to give up", "無法表達 Poor communication"],
+                dimension: "self_awareness"
+            },
+            {
+                id: 5,
+                zh: "在生活中，哪個領域最容易讓您失焦？",
+                en: "Which area makes you lose focus most easily?",
+                type: "single",
+                function: "優先級排序 | Priority management",
+                purpose: "找到真正重要的事 | Find what truly matters",
+                oldModel: "隨波逐流 | Go with the flow",
+                newModel: "清晰的優先級系統 | Clear priority system",
+                options: ["工作 Work", "健康 Health", "關係 Relationships", "個人成長 Personal growth", "財務 Finance"],
+                dimension: "priority"
+            },
+            {
+                id: 6,
+                zh: "您最想改變生活中的什麼？",
+                en: "What do you most want to change in your life?",
+                type: "single",
+                function: "變革動力 | Change motivation",
+                purpose: "找到內驅力的源頭 | Find intrinsic motivation",
+                oldModel: "應該改變 | Should change",
+                newModel: "想要改變且有計劃 | Want to change with plan",
+                options: ["工作狀態 Work situation", "身體健康 Physical health", "人際關係 Relationships", "財務狀況 Finance", "心理狀態 Mental health"],
+                dimension: "change"
+            },
+            {
+                id: 7,
+                zh: "您認為成功最關鍵的因素是什麼？",
+                en: "What do you think is the key to success?",
+                type: "single",
+                function: "成功信念 | Success belief",
+                purpose: "揭示隱含的價值觀 | Reveal implicit values",
+                oldModel: "運氣或天賦 | Luck or talent",
+                newModel: "系統性的長期投入 | Systematic long-term effort",
+                options: ["堅持不懈 Persistence", "聰明策略 Smart strategy", "好運氣 Good luck", "人脈關係 Connections", "持續學習 Continuous learning"],
+                dimension: "belief"
+            },
+            {
+                id: 8,
+                zh: "在人際互動中，您最常面對的挑戰是？",
+                en: "What's your biggest challenge in relationships?",
+                type: "single",
+                function: "關係模式 | Relationship pattern",
+                purpose: "理解人際動力 | Understand interpersonal dynamics",
+                oldModel: "要不被喜歡，要不就獨立 | Binary approach",
+                newModel: "建立健康的邊界和連結 | Healthy boundaries & connections",
+                options: ["表達需求 Express needs", "設定邊界 Set boundaries", "信任他人 Trust others", "傾聽理解 Listen & understand", "處理衝突 Handle conflict"],
+                dimension: "relationship"
+            },
+            {
+                id: 9,
+                zh: "您對金錢的態度最接近哪個說法？",
+                en: "Which statement best describes your attitude toward money?",
+                type: "single",
+                function: "財務心態 | Financial mindset",
+                purpose: "理解財富信念 | Understand wealth beliefs",
+                oldModel: "有錢就幸福 | Money equals happiness",
+                newModel: "金錢是自由和選擇的工具 | Money as tool for freedom",
+                options: ["金錢不重要 Money doesn't matter", "安心就夠 Security enough", "追求財務自由 Pursue freedom", "創造更多價值 Create more value", "平衡生活 Balance life"],
+                dimension: "wealth"
+            },
+            {
+                id: 10,
+                zh: "您對未來的願景最吸引人的是？",
+                en: "What attracts you most about your future vision?",
+                type: "single",
+                function: "願景驅動 | Vision motivation",
+                purpose: "找到真正的渴望 | Find true desire",
+                oldModel: "別人的期望 | Others' expectations",
+                newModel: "發自內心的呼喚 | Heart's true calling",
+                options: ["成就與認可 Achievement", "家庭與愛 Family & love", "自由與獨立 Freedom & independence", "對世界的貢獻 Contribution", "不斷成長 Continuous growth"],
+                dimension: "vision"
+            }
+        ];
+
+        // Complete 100 questions database
+        const questionsData = [
+            // Q11-20: Values & Belief System
+            { id: 11, zh: "您認為最重要的價值觀是什麼？", en: "What value is most important to you?", function: "價值排序 | Values ranking", purpose: "找到人生的優先級 | Identify life priorities", oldModel: "隨波逐流 | Drift with tide", newModel: "清晰的價值座標 | Clear value coordinates", dimension: "values", options: ["家庭 Family", "成就 Achievement", "自由 Freedom", "安全 Security", "貢獻 Contribution"] },
+            { id: 12, zh: "您對金錢的看法最準確的是？", en: "Which statement about money is most accurate?", function: "財富心態 | Wealth mindset", purpose: "理解關於匱乏的信念 | Understand scarcity beliefs", oldModel: "金錢是邪惡的或魔鬼 | Money is evil", newModel: "金錢是價值交換的工具 | Money as value exchange", dimension: "wealth", options: ["金錢會讓人墮落 Money corrupts", "金錢不是重點 Money doesn't matter", "金錢是自由的保障 Money enables freedom", "有錢就幸福 Money = happiness", "錢是中性的工具 Neutral tool"] },
+            { id: 13, zh: "您最害怕的失去是什麼？", en: "What loss do you fear most?", function: "核心恐懼 | Core fears", purpose: "識別心理的防禦機制 | Identify defense mechanisms", oldModel: "逃避恐懼 | Avoid fear", newModel: "面對並轉化恐懼 | Face and transform fear", dimension: "fear", options: ["失去愛的人 Losing loved ones", "失去能力 Losing capability", "失去地位 Losing status", "失去控制 Losing control", "失去希望 Losing hope"] },
+            { id: 14, zh: "您對死亡的態度是？", en: "What is your attitude toward death?", function: "終極關懷 | Ultimate concern", purpose: "透視人生的真正意義 | See true life meaning", oldModel: "否認和逃避 | Deny and avoid", newModel: "接納並活得更有意義 | Accept and live meaningfully", dimension: "meaning", options: ["害怕和焦慮 Afraid and anxious", "不想談論 Prefer not to discuss", "看淡生死 Accept inevitability", "用宗教信仰面對 Religious belief", "用創造傳承面對 Leave legacy"] },
+            { id: 15, zh: "您覺得自己活著的意義是？", en: "What do you think is your life's meaning?", function: "使命感 | Sense of mission", purpose: "連接內在驅力和外在行動 | Connect inner drive to action", oldModel: "別人定義的人生 | Others' definition", newModel: "自己定義和創造的人生 | Self-defined life", dimension: "mission", options: ["為家人活 For family", "追求成就 Pursue achievement", "幫助他人 Help others", "享受當下 Enjoy present", "創造改變 Create change"] },
+            { id: 16, zh: "您最相信什麼力量能改變人生？", en: "What power do you most believe can change life?", function: "改變信念 | Change beliefs", purpose: "理解內控/外控的平衡 | Understand locus of control", oldModel: "命運決定一切 | Fate determines all", newModel: "選擇和行動創造未來 | Choices create future", dimension: "agency", options: ["運氣和命運 Luck and fate", "他人的幫助 Others' help", "自己的努力 Own effort", "環境和條件 Environment", "信念和思維 Mindset"] },
+            { id: 17, zh: "您對成功的定義最接近？", en: "Which definition of success resonates most?", function: "成功模型 | Success model", purpose: "檢視隱藏的期望 | Examine hidden expectations", oldModel: "單一維度的成功 | Single dimension", newModel: "多維度的幸福感 | Multidimensional fulfillment", dimension: "success", options: ["金錢充足 Financial security", "工作滿足 Career satisfaction", "家庭和諧 Family harmony", "自我實現 Self-actualization", "對世界的影響 Impact on world"] },
+            { id: 18, zh: "您覺得自己最本質的優點是？", en: "What is your most essential strength?", function: "自我認知 | Self-awareness", purpose: "發掘核心資源 | Discover core resources", oldModel: "自我貶低 | Self-deprecation", newModel: "看見並發展優勢 | See and develop strengths", dimension: "strength", options: ["同理心 Empathy", "堅韌 Resilience", "智慧 Wisdom", "勇氣 Courage", "創造力 Creativity"] },
+            { id: 19, zh: "您在人生中最遺憾的是什麼？", en: "What do you regret most in life?", function: "遺憾分析 | Regret analysis", purpose: "從過去學習，設計未來 | Learn from past, design future", oldModel: "後悔並陷入自責 | Regret and blame", newModel: "接納過去，優化未來 | Accept past, optimize future", dimension: "learning", options: ["沒有勇敢去愛 Didn't love bravely", "沒有追夢 Didn't pursue dreams", "太在乎他人看法 Cared too much", "沒有好好學習 Didn't study well", "沒有建立關係 Didn't build connections"] },
+            { id: 20, zh: "您對人生下個10年的願景是？", en: "What is your vision for the next 10 years?", function: "願景構建 | Vision building", purpose: "連接現在和未來 | Bridge present and future", oldModel: "漫無目的 | Aimless drifting", newModel: "清晰的方向和里程碑 | Clear direction and milestones", dimension: "vision", options: ["事業成功 Career success", "家庭幸福 Family happiness", "環遊世界 Travel the world", "財務自由 Financial freedom", "心靈成長 Spiritual growth"] },
+            
+            // Q21-30: Relationship & Connection
+            { id: 21, zh: "在親密關係中，您最容易的是？", en: "What comes easiest in intimate relationships?", function: "親密能力 | Intimacy capacity", purpose: "了解連結的模式 | Understand connection patterns", oldModel: "要不親密，要不獨立 | Binary attachment", newModel: "健康的相互依存 | Healthy interdependence", dimension: "intimacy", options: ["給予關愛 Giving love", "接收關愛 Receiving love", "表達需求 Expressing needs", "處理衝突 Handling conflict", "維持空間 Maintaining space"] },
+            { id: 22, zh: "與他人發生衝突時，您通常？", en: "When conflict arises, you usually...", function: "衝突模式 | Conflict pattern", purpose: "發現溝通的盲點 | Discover communication blindspots", oldModel: "對抗或退縮 | Fight or flee", newModel: "連結和理解 | Connect and understand", dimension: "conflict", options: ["直接表達不滿 Express anger directly", "冷戰和疏遠 Go silent", "尋求妥協 Seek compromise", "試圖理解對方 Try to understand", "交給時間解決 Let time heal"] },
+            { id: 23, zh: "您在人際中最容易感到？", en: "What do you most easily feel in relationships?", function: "人際情緒 | Relational emotion", purpose: "識別情感模式 | Identify emotional patterns", oldModel: "情緒來襲時失控 | Lose control to emotions", newModel: "覺察情緒並回應 | Aware of emotions, respond", dimension: "emotion", options: ["被理解和接納 Understood & accepted", "被評判和拒絕 Judged & rejected", "孤獨和被遺棄 Lonely & abandoned", "被依賴和需要 Needed & depended on", "安全和信任 Safe & trusted"] },
+            { id: 24, zh: "您对伴侶/朋友最擔心的是？", en: "What worries you most about your partners?", function: "人際焦慮 | Relational anxiety", purpose: "理解依戀和害怕 | Understand attachment fears", oldModel: "無法信任 | Cannot trust", newModel: "有根據的信任 | Grounded trust", dimension: "trust", options: ["他們會離開 They'll leave", "他們會背叛 They'll betray", "他們不理解我 They don't understand", "我會傷害他們 I'll hurt them", "我不值得被愛 I'm unworthy"] },
+            { id: 25, zh: "您最希望別人如何對待您？", en: "How do you wish people would treat you?", function: "渴望滿足 | Desired fulfillment", purpose: "知道自己真正的需求 | Know true needs", oldModel: "無法表達需求 | Can't express needs", newModel: "清晰表達並設立邊界 | Clear expression & boundaries", dimension: "need", options: ["尊重和肯定 Respect & affirmation", "傾聽和理解 Listening & understanding", "幫助和支持 Help & support", "給予空間和自由 Space & freedom", "真誠和坦白 Honesty & authenticity"] },
+            { id: 26, zh: "您對群體的態度是？", en: "What is your attitude toward groups?", function: "社交取向 | Social orientation", purpose: "理解歸屬感需求 | Understand belonging needs", oldModel: "被迫融入或拒絕 | Forced fit or rejection", newModel: "選擇性地找到自己的社群 | Intentionally find your tribe", dimension: "belonging", options: ["熱愛社交，害怕孤獨 Love socializing, fear alone", "享受人群 Enjoy groups", "可以社交也可以獨處 Either is fine", "更喜歡小圈子 Prefer small circles", "傾向獨處 Prefer solitude"] },
+            { id: 27, zh: "您在家庭中的角色是？", en: "What is your role in your family?", function: "家庭定位 | Family positioning", purpose: "了解幼時印記 | Understand early imprints", oldModel: "被困在角色裡 | Trapped in role", newModel: "有意識地調整互動 | Consciously adjust interaction", dimension: "family", options: ["照顧者/父母化 Caretaker", "表現者/承載期待 Performer", "反抗者/打破規則 Rebel", "平和者/調解人 Peacemaker", "獨立者/自立更生 Independent"] },
+            { id: 28, zh: "您對性/親密接觸的態度是？", en: "Your attitude toward intimacy is...", function: "身體親密 | Physical intimacy", purpose: "了解性與愛的關係 | Understand sexuality & love", oldModel: "分離或混淆 | Separate or confused", newModel: "整合身心靈的親密 | Integrated intimacy", dimension: "sexuality", options: ["渴望但困難 Desired but difficult", "自在和享受 Comfortable & enjoying", "有責任感但缺乏激情 Dutiful but passionless", "恐懼和回避 Fear & avoidance", "力量和掌控 Power & control"] },
+            { id: 29, zh: "您最難原諒的是什麼？", en: "What is hardest for you to forgive?", function: "原諒能力 | Forgiveness capacity", purpose: "發現核心傷害 | Discover core wounds", oldModel: "長期怨恨 | Long-term resentment", newModel: "理解和釋放 | Understand and release", dimension: "forgiveness", options: ["對我的背叛 Betrayal of me", "對他人的傷害 Hurting others", "對自己的失望 Self-disappointment", "無法改變的現實 Unchangeable reality", "對世界的不公平 World's unfairness"] },
+            { id: 30, zh: "您在關係中最強大的是？", en: "What is your greatest strength in relationships?", function: "人際優勢 | Relational strength", purpose: "發現和發展關係資源 | Discover relationship resources", oldModel: "看不見自己的優勢 | Can't see own strength", newModel: "看見並發展優勢 | See and develop", dimension: "strength", options: ["傾聽他人 Listening", "給予支持 Supporting others", "誠實溝通 Honest communication", "包容差異 Accepting differences", "帶給人快樂 Bringing joy"] },
+            
+            // Q31-40: Work & Achievement
+            { id: 31, zh: "您對工作的首要期望是？", en: "What is your primary expectation from work?", function: "職業動力 | Work motivation", purpose: "找到工作的真實意義 | Find true work meaning", oldModel: "被迫謀生 | Forced survival", newModel: "主動選擇和創造 | Active choice and creation", dimension: "work", options: ["穩定收入 Income security", "自我實現 Self-expression", "幫助他人 Help others", "掌握自主 Autonomy", "社會認可 Social recognition"] },
+            { id: 32, zh: "您在工作中最怕的失敗是？", en: "What work failure do you fear most?", function: "職場恐懼 | Work fears", purpose: "識別自尊與能力的掛鉤 | Identify competence concerns", oldModel: "完美主義癱瘓 | Perfectionist paralysis", newModel: "從失敗中學習 | Learn from failure", dimension: "achievement", options: ["無法勝任 Incompetence", "被他人超越 Being surpassed", "浪費時間 Wasting time", "沒被認可 Not recognized", "讓團隊失望 Disappointing team"] },
+            { id: 33, zh: "您對成長和學習的態度是？", en: "Your attitude toward growth and learning is...", function: "學習心態 | Learning mindset", purpose: "檢視成長的信念 | Examine growth beliefs", oldModel: "天賦決定一切 | Talent is fixed", newModel: "努力和方法決定成長 | Effort and method matter", dimension: "learning", options: ["天生有才華無需努力 Natural talent", "需要努力但會有回報 Effort pays off", "已經定型無法改變 Fixed now", "喜歡學習挑戰自己 Love learning challenges", "害怕失敗所以不試 Fear failure"] },
+            { id: 34, zh: "您的職業生涯想要達到什麼？", en: "What do you want to achieve in your career?", function: "職業目標 | Career goals", purpose: "連接行動和願景 | Connect action to vision", oldModel: "被動應對 | Passive response", newModel: "主動設計職業 | Design career actively", dimension: "career", options: ["財務成功 Financial success", "職位高升 Position advancement", "成為專家 Become expert", "自由創業 Own business", "平衡生活 Work-life balance"] },
+            { id: 35, zh: "您在工作中最容易感到什麼情緒？", en: "What emotion do you most feel at work?", function: "職場情緒 | Work emotion", purpose: "識別職場動力 | Identify work drivers", oldModel: "壓抑情緒 | Suppress feelings", newModel: "利用情緒做決策 | Use emotions wisely", dimension: "emotion", options: ["充滿熱情 Energized", "感到無聊 Bored", "時常焦慮 Anxious", "被認可而滿足 Fulfilled", "被消耗而疲憊 Exhausted"] },
+            { id: 36, zh: "您與主管/老闆的關係模式是？", en: "Your relationship pattern with authority is...", function: "權威關係 | Authority dynamics", purpose: "理解權力互動 | Understand power dynamics", oldModel: "順服或反抗 | Submission or rebellion", newModel: "尊重與真誠溝通 | Respect with authenticity", dimension: "authority", options: ["尊敬並服從 Respectful compliance", "有意見但不敢說 Agree outwardly", "經常衝突 Often conflict", "親近信任 Trust and closeness", "保持距離 Maintain distance"] },
+            { id: 37, zh: "您對團隊合作的貢獻是什麼？", en: "What is your contribution to teamwork?", function: "團隊角色 | Team role", purpose: "了解互補性 | Understand complementarity", oldModel: "被動參與 | Passive participation", newModel: "有意識的角色貢獻 | Intentional contribution", dimension: "teamwork", options: ["主動領導 Leading", "深入執行 Executing well", "連結和調和 Connecting", "創新和突破 Innovating", "支持和鼓勵 Supporting"] },
+            { id: 38, zh: "您在職場中最大的限制是？", en: "What is your biggest workplace limitation?", function: "職場障礙 | Career barriers", purpose: "找到成長點 | Find growth edge", oldModel: "怪環境或他人 | Blame externals", newModel: "承認並改進個人因素 | Own and improve", dimension: "limitation", options: ["技能不足 Lack skills", "人際能力弱 Poor communication", "決策優柔寡斷 Indecision", "害怕挑戰 Fear challenges", "缺乏毅力 Lack persistence"] },
+            { id: 39, zh: "您對金錢和薪水的態度最真實的是？", en: "Your most honest attitude about money is...", function: "金錢與薪酬 | Money & compensation", purpose: "理解經濟安全感 | Understand economic security", oldModel: "金錢是罪惡 | Money is evil", newModel: "金錢是價值交換 | Money as exchange value", dimension: "money", options: ["永遠不夠 Never enough", "足夠就好 Enough is enough", "越多越好 More is better", "用來幫助他人 Help others with it", "實現自由的工具 Freedom tool"] },
+            { id: 40, zh: "您最想要什麼樣的職業發展？", en: "What kind of career development do you want?", function: "職業路徑 | Career path", purpose: "設計職業軌跡 | Design career trajectory", oldModel: "被推著走 | Being pushed along", newModel: "主動規劃和創造 | Actively plan and create", dimension: "development", options: ["穩定進升 Steady advancement", "跳躍式成長 Rapid growth", "換領域探索 Change fields", "創業和獨立 Entrepreneurship", "影響力和領導 Influence & leadership"] },
+            
+            // Q41-50: Health & Body
+            { id: 41, zh: "您對身體最常的感受是？", en: "What do you most commonly feel about your body?", function: "身體覺察 | Body awareness", purpose: "理解身心連結 | Understand mind-body connection", oldModel: "忽視或不滿意 | Ignore or dissatisfied", newModel: "感謝和照顧 | Gratitude and care", dimension: "body", options: ["感謝和滿意 Grateful & satisfied", "中立無感 Neutral", "不滿意和批評 Dissatisfied & critical", "害怕和焦慮 Afraid & anxious", "力量和掌控 Strong & in control"] },
+            { id: 42, zh: "您最容易忽視的健康面向是？", en: "Which health aspect do you most neglect?", function: "健康盲點 | Health blindspots", purpose: "找到忽略的自我照顧 | Find neglected self-care", oldModel: "無視身體信號 | Ignore body signals", newModel: "聆聽身體並回應 | Listen and respond to body", dimension: "health", options: ["睡眠 Sleep", "運動 Exercise", "飲食 Nutrition", "壓力管理 Stress", "醫療檢查 Medical checkup"] },
+            { id: 43, zh: "您對運動的態度是？", en: "Your attitude toward exercise is...", function: "運動習慣 | Exercise habit", purpose: "了解自我照顧模式 | Understand self-care", oldModel: "懲罰或逃避 | Punishment or avoidance", newModel: "喜樂的身體表達 | Joyful body expression", dimension: "exercise", options: ["懲罰身體 Punishment", "義務和應該 Should do", "享受和活力 Enjoyment & energy", "為外表 For appearance", "難以開始 Struggle to start"] },
+            { id: 44, zh: "您的壓力如何表現在身體上？", en: "How does stress manifest in your body?", function: "壓力識別 | Stress recognition", purpose: "早期預警系統 | Early warning system", oldModel: "無法識別 | Can't recognize", newModel: "敏銳觀察和回應 | Aware and responsive", dimension: "stress", options: ["頭痛或肌肉緊張 Physical tension", "失眠 Sleep issues", "消化問題 Digestion", "免疫下降 Illness", "沒有特別感受 No particular feeling"] },
+            { id: 45, zh: "您對食物的態度最準確的是？", en: "Your most honest attitude about food is...", function: "飲食模式 | Eating patterns", purpose: "理解與食物的關係 | Understand food relationship", oldModel: "完全控制或放縱 | Control or indulge", newModel: "覺察和平衡 | Aware and balanced", dimension: "nutrition", options: ["吃是享受 Food is pleasure", "吃是補充能量 Fuel for energy", "吃是安慰 Comfort", "吃是懲罰或控制 Control", "沒有特別想法 No strong feeling"] },
+            { id: 46, zh: "您對醫療/預防保健的態度是？", en: "Your attitude toward health care is...", function: "健康行動 | Health action", purpose: "預防vs治療的權衡 | Prevention vs treatment", oldModel: "等病才看醫生 | Only doctor when sick", newModel: "積極預防和照顧 | Preventive care", dimension: "healthcare", options: ["積極預防 Preventive", "定期檢查 Regular checkup", "有症狀才就醫 When symptoms arise", "避免看醫生 Avoid doctors", "信靠自然療法 Alternative medicine"] },
+            { id: 47, zh: "您的睡眠品質通常如何？", en: "Your sleep quality is usually...", function: "睡眠質量 | Sleep quality", purpose: "評估恢復能力 | Assess recovery", oldModel: "無法控制 | Uncontrollable", newModel: "可以優化的習慣 | Optimizable habit", dimension: "sleep", options: ["深沉和充足 Deep & adequate", "足夠但淺眠 Adequate but light", "經常失眠 Often insomnia", "多夢或易醒 Restless", "無法評估 Can't evaluate"] },
+            { id: 48, zh: "您對老化和衰老的態度是？", en: "Your attitude toward aging is...", function: "生命週期 | Life cycle", purpose: "接納人生的自然流轉 | Accept natural flow", oldModel: "恐懼和抗拒 | Fear and resist", newModel: "接納和準備 | Accept and prepare", dimension: "aging", options: ["害怕和抗拒 Afraid & resisting", "無所謂 Indifferent", "尊重和準備 Respectful & prepared", "期待新階段 Anticipate new phase", "不願意想起 Avoid thinking about"] },
+            { id: 49, zh: "您對補充營養品或健康產品的態度？", en: "Your attitude toward supplements/health products?", function: "健康選擇 | Health choices", purpose: "理解主動vs被動 | Understand agency", oldModel: "盲目相信或否定 | Blind belief or denial", newModel: "知情的選擇 | Informed choice", dimension: "wellness", options: ["積極補充 Actively supplement", "有需要才補 Only if needed", "不信任 Skeptical", "盲目相信 Blindly believe", "沒有特別想法 No opinion"] },
+            { id: 50, zh: "您對死亡和健康風險最真實的態度？", en: "Your most honest attitude about mortality is...", function: "終極清醒 | Ultimate awareness", purpose: "用死亡的事實喚醒 | Use mortality to awaken", oldModel: "否認或恐懼 | Deny or fear", newModel: "接納並活得深刻 | Accept and live deeply", dimension: "mortality", options: ["完全不想 Completely avoidant", "有點害怕 Somewhat afraid", "坦然接納 Accept calmly", "促使我活得更好 Motivates me", "深思和平靜 Contemplative peace"] },
+            
+            // Q51-60: Emotion & Psychology
+            { id: 51, zh: "您最常壓抑的情緒是什麼？", en: "What emotion do you most suppress?", function: "情緒抑制 | Emotion suppression", purpose: "發現隱藏的感受 | Discover hidden feelings", oldModel: "完全壓制 | Complete suppression", newModel: "識別和表達 | Identify and express", dimension: "emotion", options: ["憤怒 Anger", "悲傷 Sadness", "恐懼 Fear", "脆弱 Vulnerability", "喜悅 Joy"] },
+            { id: 52, zh: "您處理負面情緒的常用方式是？", en: "How do you typically handle negative emotions?", function: "情緒處理 | Emotion regulation", purpose: "找到健康的應對方式 | Find healthy coping", oldModel: "逃避或發洩 | Avoid or explode", newModel: "覺察和轉化 | Aware and transform", dimension: "coping", options: ["談話傾訴 Talk it out", "運動釋放 Exercise", "獨處思考 Solitude & reflection", "轉移注意力 Distract myself", "找專業幫助 Professional help"] },
+            { id: 53, zh: "您的焦慮最常來自於？", en: "Your anxiety most often comes from...", function: "焦慮源 | Anxiety source", purpose: "理解擔憂的模式 | Understand worry patterns", oldModel: "無法控制的擔心 | Uncontrollable worry", newModel: "可控制和可管理 | Controllable and manageable", dimension: "anxiety", options: ["未來不確定 Uncertainty", "過往遺憾 Past regrets", "他人評判 Others' judgment", "無法掌控 Lack of control", "失去什麼 Potential loss"] },
+            { id: 54, zh: "您最難接納自己的是什麼？", en: "What about yourself is hardest to accept?", function: "自我接納 | Self-acceptance", purpose: "發現內在的陰影 | Discover inner shadow", oldModel: "批評和否定 | Criticism & denial", newModel: "接納和整合 | Accept and integrate", dimension: "shadow", options: ["軟弱和脆弱 Vulnerability", "缺點和限制 Flaws & limitations", "黑暗想法 Dark thoughts", "失敗經歷 Failures", "渴望和慾望 Desires"] },
+            { id: 55, zh: "您的自尊感通常如何？", en: "Your self-esteem is generally...", function: "自尊評估 | Self-esteem", purpose: "了解自我價值感 | Understand self-worth", oldModel: "取決於外在表現 | Dependent on performance", newModel: "內在的穩定自我價值 | Stable inner worth", dimension: "esteem", options: ["很低，常自責 Very low", "依賴他人認可 Dependent on others", "穩定和健康 Stable & healthy", "有些自戀傾向 Somewhat narcissistic", "高估自己能力 Overestimate"] },
+            { id: 56, zh: "您最害怕別人發現您的什麼秘密？", en: "What secret do you fear most people discovering?", function: "面具識別 | Mask identification", purpose: "看見真正的自己 | See true self", oldModel: "隱藏真相 | Hide truth", newModel: "勇敢做自己 | Brave authenticity", dimension: "authenticity", options: ["不如別人 Inadequacy", "真實的渴望 True desires", "過去的錯誤 Past mistakes", "真實的感受 Real feelings", "沒有什麼秘密 No secrets"] },
+            { id: 57, zh: "您對改變和不確定的態度是？", en: "Your attitude toward change is...", function: "適應能力 | Adaptability", purpose: "了解對變化的恐懼 | Understand change fear", oldModel: "抗拒改變 | Resist change", newModel: "擁抱成長 | Embrace growth", dimension: "change", options: ["害怕和抗拒 Fearful & resistant", "被迫才接受 Reluctant", "開放和好奇 Open & curious", "積極尋求 Actively seek", "中立態度 Neutral"] },
+            { id: 58, zh: "您對內疚感的反應通常是？", en: "How do you typically respond to guilt?", function: "內疚管理 | Guilt management", purpose: "區分內疚和責任 | Distinguish guilt from responsibility", oldModel: "無限內疚或無感 | Excessive or none", newModel: "適度和建設性 | Appropriate and constructive", dimension: "responsibility", options: ["過度內疚 Over-guilty", "修復和彌補 Repair & make amends", "無所謂 Indifferent", "自我懲罰 Self-punish", "尋求原諒 Seek forgiveness"] },
+            { id: 59, zh: "您最渴望得到的情感滿足是？", en: "What emotional fulfillment do you crave most?", function: "情感需求 | Emotional needs", purpose: "清楚自己的渴望 | Clarify yearnings", oldModel: "不清楚或無法表達 | Unclear or unable to express", newModel: "知道和尋求 | Know and seek", dimension: "need", options: ["被愛和接納 Love & acceptance", "被理解和看見 Understanding", "被肯定和認可 Affirmation", "被需要和重要 Needed & valued", "被啟發和引導 Inspired & guided"] },
+            { id: 60, zh: "您的心理韌性最强的時候是？", en: "Your resilience is strongest when...", function: "韌性條件 | Resilience conditions", purpose: "發現自己的資源 | Discover own resources", oldModel: "認為自己沒有韌性 | Believe I'm fragile", newModel: "知道自己的力量 | Know my strength", dimension: "resilience", options: ["有人支持 Have support", "有清晰目標 Have clear goal", "感到被需要 Feeling needed", "沒有期望 No expectations", "狀態好時 When healthy"] },
+
+            // Q61-100: Life Integration & Wisdom
+        ];
+
+        // 添加Q61-100的数据
+        const additionalQuestions = [
+            { id: 61, zh: "您對自由的定義最準確的是？", en: "Your definition of freedom is most accurately...", function: "自由觀 | Freedom concept", purpose: "理解內在vs外在限制 | Understand constraints", oldModel: "無限制的行動 | Unlimited action", newModel: "有責任的選擇 | Responsible choice", dimension: "freedom", options: ["沒有規則和約束 No rules", "能做自己想做 Do what I want", "在責任中選擇 Choose within bounds", "從內在恐懼解脫 Freedom from fear", "為他人考慮的自由 Freedom within care"] },
+            { id: 62, zh: "您對時間流逝的感受是？", en: "How do you feel about the passage of time?", function: "時間觀 | Time perception", purpose: "覺察生命的有限性 | Awaken to finitude", oldModel: "浪費或焦慮 | Waste or anxiety", newModel: "珍惜和充分利用 | Cherish and use well", dimension: "time", options: ["時間飛逝，感到遺憾 Time flies, regretful", "時間充裕 Plenty of time", "每刻都很珍貴 Each moment precious", "無法把握時間 Can't grasp it", "不想面對 Avoid thinking"] },
+            { id: 63, zh: "您最想留給世界的是什麼？", en: "What do you want to leave to the world?", function: "遺產意識 | Legacy awareness", purpose: "連接個人與世界 | Connect self to world", oldModel: "無關己事 | Not my concern", newModel: "我有貢獻責任 | I have responsibility", dimension: "legacy", options: ["金錢財富 Wealth", "知識和教導 Knowledge & teaching", "愛和善良 Love & kindness", "改變和創新 Change & innovation", "沒有特別想法 No thought"] },
+            { id: 64, zh: "您對宗教或靈性的態度是？", en: "Your attitude toward spirituality is...", function: "靈性取向 | Spiritual orientation", purpose: "理解終極關懷 | Understand ultimate meaning", oldModel: "盲信或否定 | Blind belief or denial", newModel: "探索和整合 | Explore and integrate", dimension: "spirituality", options: ["深信宗教 Deep faith", "尊重但不信 Respect, don't believe", "探索中 Still exploring", "完全不信 Completely secular", "有自己的信念 Personal beliefs"] },
+            { id: 65, zh: "您認為什麼是人生最重要的教訓？", en: "What do you think is life's most important lesson?", function: "人生智慧 | Life wisdom", purpose: "整合學習和經驗 | Integrate learning", oldModel: "別人的教訓 | Others' lessons", newModel: "自己發現的真理 | Self-discovered truth", dimension: "wisdom", options: ["愛和連結 Love & connection", "失敗和成長 Failure & growth", "接納和放下 Acceptance & letting go", "誠實和正直 Honesty & integrity", "活在當下 Living in present"] },
+            { id: 66, zh: "您最想成為什麼樣的人？", en: "What kind of person do you most want to become?", function: "人格理想 | Ideal self", purpose: "設計人生方向 | Design life direction", oldModel: "社會期待 | Social expectation", newModel: "真實的內在呼喚 | Authentic inner call", dimension: "identity", options: ["智慧和沉著 Wise & calm", "勇敢和大膽 Brave & bold", "善良和同情 Kind & compassionate", "誠實和真摯 Honest & authentic", "自由和獨立 Free & independent"] },
+            { id: 67, zh: "您與自己的關係品質如何？", en: "Your relationship with yourself is...", function: "自我關係 | Self-relationship", purpose: "了解自我對話品質 | Understand self-talk", oldModel: "批評或冷漠 | Critical or indifferent", newModel: "親切和支持 | Kind and supportive", dimension: "self_love", options: ["友善和支持 Friendly & supportive", "中立無感 Neutral", "批評和責備 Critical & blaming", "矛盾複雜 Complicated", "疏遠和陌生 Distant & strange"] },
+            { id: 68, zh: "您認為自己的人生故事是什麼？", en: "What is the story you tell about your life?", function: "敘事身份 | Narrative identity", purpose: "覺察並改寫故事 | Become aware and rewrite", oldModel: "被動的受害者 | Passive victim", newModel: "主動的創造者 | Active creator", dimension: "narrative", options: ["受害者故事 Victim story", "戰士故事 Warrior story", "探險者故事 Explorer story", "英雄的旅程 Hero's journey", "尚未定型 Not yet defined"] },
+            { id: 69, zh: "您對失敗的定義是？", en: "How do you define failure?", function: "失敗觀 | Failure concept", purpose: "重新框架失敗 | Reframe failure", oldModel: "絕對的負面 | Absolute negative", newModel: "學習的機會 | Learning opportunity", dimension: "growth", options: ["沒達到目標 Not reaching goal", "被他人評判 Being judged", "失去信心 Losing confidence", "無法完成 Inability to complete", "停止嘗試 Stopped trying"] },
+            { id: 70, zh: "您最誠實的人生滿足感程度是？", en: "Your honest level of life satisfaction is...", function: "人生滿意度 | Life satisfaction", purpose: "評估現狀和設計未來 | Assess and design", oldModel: "無法評估 | Can't evaluate", newModel: "清晰認知和改進 | Clear assessment & improve", dimension: "satisfaction", options: ["很低 Very low", "有些不滿 Somewhat unsatisfied", "可以接受 Acceptable", "相當滿足 Quite satisfied", "非常幸福 Very happy"] },
+            { id: 71, zh: "您在決策時最常被什麼影響？", en: "What most influences your decisions?", function: "決策模式 | Decision pattern", purpose: "了解決策驅力 | Understand decision drivers", oldModel: "無意識的模式 | Unconscious patterns", newModel: "有意識的選擇 | Conscious choice", dimension: "decision", options: ["害怕後果 Fear consequences", "尋求認可 Seek approval", "直覺和感覺 Intuition & feeling", "邏輯和分析 Logic & analysis", "價值和使命 Values & purpose"] },
+            { id: 72, zh: "您對成功的害怕是什麼？", en: "What do you fear about success?", function: "成功恐懼 | Success fears", purpose: "識別隱藏的限制信念 | Identify limiting beliefs", oldModel: "無意識的自我破壞 | Unconscious sabotage", newModel: "清楚並釋放恐懼 | Aware and release", dimension: "fear", options: ["無法承受 Can't handle it", "失去親密感 Lose closeness", "被期望困住 Trapped by expectations", "失去身份 Lose identity", "沒有什麼害怕 No fear"] },
+            { id: 73, zh: "您對別人成功的真實反應是？", en: "Your honest reaction to others' success is...", function: "嫉妒管理 | Envy management", purpose: "檢視競爭和比較 | Examine competition", oldModel: "隱藏嫉妒 | Hide envy", newModel: "承認和轉化 | Acknowledge and transform", dimension: "emotion", options: ["真心高興 Genuinely happy", "有點嫉妒 Some envy", "強烈嫉妒 Strong envy", "感到威脅 Threatened", "沒有反應 Neutral"] },
+            { id: 74, zh: "您最渴望被寬恕的是什麼？", en: "What do you most crave forgiveness for?", function: "道歉需求 | Apology needs", purpose: "面對內疚和修復 | Face guilt and repair", oldModel: "無限負罪感 | Infinite guilt", newModel: "接納並修復 | Accept and repair", dimension: "responsibility", options: ["對某人的傷害 Hurting someone", "沒活出潛力 Wasted potential", "背背自己的價值 Betrayed values", "沒有特別的 Nothing particular", "無法原諒自己 Can't forgive self"] },
+            { id: 75, zh: "您對孤獨的態度真實的是？", en: "Your honest attitude about solitude is...", function: "孤獨感 | Solitude", purpose: "區分孤獨和獨處 | Distinguish loneliness from solitude", oldModel: "恐懼或逃避 | Fear or avoid", newModel: "珍惜和修復 | Cherish and restore", dimension: "connection", options: ["害怕和避免 Fear & avoid", "可以接受 Tolerable", "需要和渴望 Need & crave", "已經適應 Adapted", "享受獨處 Enjoy solitude"] },
+            { id: 76, zh: "您人生中最大的轉折點是？", en: "What was your biggest life turning point?", function: "人生轉折 | Life turning point", purpose: "理解改變的動力 | Understand change catalysts", oldModel: "被環境推著 | Pushed by circumstances", newModel: "由內在覺醒驅動 | Driven by awakening", dimension: "growth", options: ["創傷事件 Trauma", "失敗經歷 Failure", "遇見重要的人 Meeting someone", "深刻領悟 Realization", "主動決定改變 Active choice"] },
+            { id: 77, zh: "您最希望回到過去改變什麼？", en: "What do you wish you could change in the past?", function: "過去遺憾 | Past regrets", purpose: "整合過去走向未來 | Integrate past, move forward", oldModel: "後悔和遺憾 | Regret & sorrow", newModel: "學習和接納 | Learning & acceptance", dimension: "learning", options: ["早點開始某事 Start earlier", "做更勇敢的選擇 Braver choices", "更好地對待某人 Treat someone better", "沒有特別遺憾 No regrets", "無法改變就接納 Accept unchangeable"] },
+            { id: 78, zh: "您對給予和接收的平衡如何？", en: "Your balance between giving and receiving is...", function: "互惠平衡 | Reciprocal balance", purpose: "檢視利他和自愛 | Check altruism and self-love", oldModel: "過度給予或接收 | Over-give or over-receive", newModel: "健康的流動 | Healthy flow", dimension: "reciprocity", options: ["給太多 Give too much", "接收太多 Receive too much", "大致平衡 Fairly balanced", "只給不收 Only give", "只收不給 Only receive"] },
+            { id: 79, zh: "您認為人生的終極目標是？", en: "What do you think is the ultimate life goal?", function: "人生目標 | Ultimate goal", purpose: "設計最終願景 | Design final vision", oldModel: "他人定義 | Others define", newModel: "自己定義和創造 | Self-define", dimension: "purpose", options: ["幸福 Happiness", "成就 Achievement", "貢獻 Contribution", "自由 Freedom", "愛 Love"] },
+            { id: 80, zh: "您對自己最有信心的是什麼？", en: "What are you most confident about in yourself?", function: "自信源 | Confidence source", purpose: "發現核心優勢 | Discover core strength", oldModel: "看不見優勢 | Can't see strength", newModel: "知道和發展 | Know and develop", dimension: "confidence", options: ["心地善良 Kind heart", "思考能力 Think well", "學習能力 Learn quickly", "承受能力 Resilience", "創造能力 Creativity"] },
+            { id: 81, zh: "您最常自我對話說的是？", en: "What do you most commonly tell yourself?", function: "內在對話 | Inner dialogue", purpose: "改進自我溝通 | Improve self-talk", oldModel: "批評和否定 | Critical & negative", newModel: "鼓勵和支持 | Encouraging & supportive", dimension: "mindset", options: ["我不夠好 I'm not good enough", "我很好 I'm okay", "我會越來越好 I'm growing", "我太差勁 I'm terrible", "我很有能力 I'm capable"] },
+            { id: 82, zh: "您對環境和社會的責任感如何？", en: "Your sense of social/environmental responsibility is...", function: "社會責任 | Social responsibility", purpose: "檢視社會參與 | Check social engagement", oldModel: "無關己事 | Not my concern", newModel: "我是系統的一部分 | I'm part of it", dimension: "contribution", options: ["很強，積極參與 Strong & active", "有但有限 Limited", "沒有特別想法 No thought", "無關己事 Not my concern", "無力改變 Powerless to change"] },
+            { id: 83, zh: "您最想從心靈導師那裡學到什麼？", en: "What would you most like to learn from a mentor?", function: "導師需求 | Mentorship needs", purpose: "找到外在資源 | Find outer resources", oldModel: "沒有導師 | No mentor", newModel: "主動尋求智慧 | Actively seek wisdom", dimension: "learning", options: ["智慧和洞察 Wisdom & insight", "實踐能力 Practical skills", "心靈修養 Spiritual growth", "成功方法 Success methods", "如何生活 How to live"] },
+            { id: 84, zh: "您對自己的未來最真實的感覺是？", en: "Your most honest feeling about your future is...", function: "未來感受 | Future feeling", purpose: "評估希望和恐懼 | Assess hope & fear", oldModel: "絕望或幻想 | Despair or fantasy", newModel: "清醒的樂觀 | Sober optimism", dimension: "hope", options: ["充滿希望 Full of hope", "有點擔心 Somewhat worried", "無法預測 Unpredictable", "感到害怕 Frightened", "充滿不確定 Uncertain"] },
+            { id: 85, zh: "您認為什麼是真正的成熟？", en: "What do you think real maturity is?", function: "成熟定義 | Maturity concept", purpose: "檢視成長方向 | Check growth direction", oldModel: "年齡決定 | Age determines", newModel: "智慧和整合 | Wisdom & integration", dimension: "wisdom", options: ["承擔責任 Take responsibility", "控制情緒 Control emotions", "接納不完美 Accept imperfection", "與自己和平 Peace with self", "幫助他人 Help others"] },
+            { id: 86, zh: "您對人性本質最真實的看法是？", en: "Your most honest view of human nature is...", function: "人性觀 | Human nature view", purpose: "檢視哲學立場 | Check philosophical stand", oldModel: "人本惡 | Humans are bad", newModel: "人本善可成長 | Humans are good & can grow", dimension: "philosophy", options: ["本質是自私 Essentially selfish", "本質是善良 Essentially good", "中立可塑造 Neutral & malleable", "視環境而定 Depends on environment", "不知道 Don't know"] },
+            { id: 87, zh: "您最想改變的社會問題是？", en: "What social issue do you most want to change?", function: "社會關懷 | Social concern", purpose: "連接個人和世界 | Connect self to world", oldModel: "無關己事 | Not my business", newModel: "我的責任 | My responsibility", dimension: "impact", options: ["貧困 Poverty", "教育不公 Education inequality", "環境破壞 Environmental damage", "人權侵害 Human rights violation", "心理健康 Mental health"] },
+            { id: 88, zh: "您對教育的真實看法是？", en: "Your honest view of education is...", function: "學習觀 | Learning view", purpose: "檢視成長信念 | Check growth beliefs", oldModel: "學歷至上 | Credentials matter most", newModel: "終身學習和實踐 | Lifelong learning & practice", dimension: "learning", options: ["學歷很重要 Credentials crucial", "學習改變人生 Learning transforms", "教育過時 Education outdated", "學以致用最重要 Application matters most", "沒有特別想法 No opinion"] },
+            { id: 89, zh: "您認為幸福的秘訣是什麼？", en: "What do you think is the secret to happiness?", function: "幸福探索 | Happiness exploration", purpose: "找到個人的快樂方程 | Find personal happiness formula", oldModel: "幸福是遙遠的 | Happiness is distant", newModel: "幸福是此刻的選擇 | Happiness is present choice", dimension: "wellbeing", options: ["正確的關係 Right relationships", "有意義的工作 Meaningful work", "身體健康 Physical health", "精神滿足 Spiritual fulfillment", "持續成長 Continuous growth"] },
+            { id: 90, zh: "您對死後的想象是？", en: "What is your imagining of after death?", function: "死後觀 | Afterlife view", purpose: "面對終極問題 | Face ultimate questions", oldModel: "害怕或否認 | Fear or deny", newModel: "平靜的好奇 | Peaceful curiosity", dimension: "spirituality", options: ["無所有，結束 Nothing, end", "另一種存在 Different existence", "靈魂繼續 Soul continues", "不知道 Don't know", "不想想 Prefer not to"] },
+            { id: 91, zh: "您最想對年輕的自己說什麼？", en: "What would you tell your younger self?", function: "自我對話 | Self-dialogue", purpose: "整合智慧和原諒 | Integrate wisdom & forgiveness", oldModel: "遺憾和後悔 | Regret & sorrow", newModel: "愛和寬恕 | Love & forgiveness", dimension: "wisdom", options: ["要更勇敢 Be more brave", "不用那麼努力 Don't try so hard", "相信自己 Trust yourself", "珍惜此刻 Cherish now", "一切都會好 All will be well"] },
+            { id: 92, zh: "您對和平的定義是什麼？", en: "How do you define peace?", function: "和平觀 | Peace concept", purpose: "理解內心所求 | Understand inner peace", oldModel: "沒有衝突 | No conflict", newModel: "內在的整合 | Inner integration", dimension: "peace", options: ["沒有外在衝突 No external conflict", "內心的寧靜 Inner calm", "與他人的和諧 Harmony with others", "與自己的和平 Peace with self", "靈性的完整 Spiritual wholeness"] },
+            { id: 93, zh: "您認為什麼時候是改變最好的時候？", en: "When do you think is the best time to change?", function: "改變時機 | Change timing", purpose: "鼓勵立即行動 | Encourage action now", oldModel: "等待完美時機 | Wait for perfect time", newModel: "現在就是最好時機 | Now is best time", dimension: "agency", options: ["現在 Now", "準備好時 When ready", "條件允許時 When possible", "有人幫助時 With support", "永遠太晚了 Never"] },
+            { id: 94, zh: "您最希望世界記得您什麼？", en: "What do you want the world to remember about you?", function: "遺產設計 | Legacy design", purpose: "設計有意義的人生 | Design meaningful life", oldModel: "不重要 | Doesn't matter", newModel: "我的人生有意義 | My life matters", dimension: "legacy", options: ["你很善良 You were kind", "你改變了什麼 You made a difference", "你活得真誠 You were authentic", "你愛得深 You loved deeply", "你啟發了人 You inspired others"] },
+            { id: 95, zh: "您對今天和明天最真實的承諾是？", en: "Your most honest commitment for today and tomorrow is...", function: "承諾行動 | Action commitment", purpose: "從知道到行動 | From knowledge to action", oldModel: "無承諾 | No commitment", newModel: "清晰的每日行動 | Clear daily action", dimension: "action", options: ["好好照顧自己 Care for self", "更真誠地對待人 Be authentic", "為夢想行動 Act toward dreams", "每天學習成長 Learn & grow daily", "沒有特別承諾 No particular commitment"] },
+            { id: 96, zh: "您覺得這份問卷對您的幫助是？", en: "How helpful do you find this assessment?", function: "反饋評估 | Feedback assessment", purpose: "改進和優化應用 | Improve application", oldModel: "無法評估 | Can't evaluate", newModel: "清晰的反饋 | Clear feedback", dimension: "feedback", options: ["非常有幫助 Very helpful", "有些幫助 Somewhat helpful", "無關緊要 Neutral", "沒什麼幫助 Not helpful", "有點困惑 Confusing"] },
+            { id: 97, zh: "您認為自己最需要升級的能力是？", en: "What ability do you think you need most to upgrade?", function: "能力盤點 | Capability audit", purpose: "設計升級路徑 | Design upgrade path", oldModel: "無法識別 | Can't identify", newModel: "清楚自己的成長邊界 | Know growth edge", dimension: "capability", options: ["自我管理 Self-management", "人際溝通 Communication", "解決問題 Problem-solving", "創新創意 Innovation", "領導力 Leadership"] },
+            { id: 98, zh: "您對人性OS最想進一步探索的是？", en: "What aspect of Human OS interests you most?", function: "學習興趣 | Learning interest", purpose: "個性化學習路徑 | Personalized path", oldModel: "被動接收 | Passive reception", newModel: "主動探索 | Active exploration", dimension: "interest", options: ["認識自己 Self-knowledge", "改進關係 Improve relationships", "建立系統 Build systems", "心靈成長 Spiritual growth", "實現目標 Goal achievement"] },
+            { id: 99, zh: "您覺得自己目前的人生狀態是？", en: "How would you describe your current life status?", function: "現狀評估 | Status assessment", purpose: "清晰基線 | Clear baseline", oldModel: "無法評估 | Can't assess", newModel: "有清晰認知 | Clear awareness", dimension: "status", options: ["停滯 Stuck", "過渡 Transitioning", "流動 Flowing", "成長 Growing", "蛻變 Transforming"] },
+            { id: 100, zh: "您對完成這份問卷後的下一步是？", en: "What is your next step after this assessment?", function: "行動規劃 | Action planning", purpose: "從認知轉化為行動 | Transform insight to action", oldModel: "無計劃 | No plan", newModel: "清晰的行動計畫 | Clear action plan", dimension: "action", options: ["反思和整理 Reflect & organize", "制定改變計畫 Plan changes", "尋求指導和幫助 Seek guidance", "立即採取行動 Take action now", "與他人分享 Share with others"] }
+        ];
+
+        // Merge questionsData (Q11-Q60) into questions
+        questions.push(...questionsData);
+
+        // Merge additionalQuestions (Q61-Q100) into questions
+        questions.push(...additionalQuestions);
+
+        // ============ State Management ============
+        let userResponses = {};
+        let currentQuestionIndex = 0;
+        let assessmentHistory = [];
+
+        // ============ Functions ============
+        function switchScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Load screen content
+            if (screenId === 'questions') {
+                loadQuestion();
+            } else if (screenId === 'all-questions') {
+                displayAllQuestions();
+            } else if (screenId === 'modules') {
+                displayModules();
+            } else if (screenId === 'mapping') {
+                displayMapping();
+            } else if (screenId === 'map') {
+                displayMaps();
+            } else if (screenId === 'capability') {
+                displayCapabilityMap();
+            }
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            const container = document.getElementById('questionsContainer');
+            
+            // Extract English parts from bilingual text
+            const functionEnglish = q.function.split('|')[1]?.trim() || '';
+            const purposeEnglish = q.purpose.split('|')[1]?.trim() || '';
+            
+            container.innerHTML = `
+                <div class="question-container">
+                    <div class="q-number">Question ${q.id}/100</div>
+                    <div class="q-content">
+                        <h3 class="zh">${q.zh}</h3>
+                        <div class="en" style="display: flex; align-items: center; gap: 12px;">
+                            <span>${q.en}</span>
+                            <button onclick="speakText('${q.en.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 20px; padding: 0; hover: filter: brightness(1.2);">🔊</button>
+                        </div>
+                    </div>
+                    
+                    <div class="q-info">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <strong>🎯 功能 Function</strong>
+                            ${functionEnglish ? `<button onclick="speakText('${functionEnglish.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 0;">🔊</button>` : ''}
+                        </div>
+                        ${q.function}
+                    </div>
+                    
+                    <div class="q-info">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <strong>💡 本質 Purpose</strong>
+                            ${purposeEnglish ? `<button onclick="speakText('${purposeEnglish.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 0;">🔊</button>` : ''}
+                        </div>
+                        ${q.purpose}
+                    </div>
+                    
+                    <div class="q-info">
+                        <strong>📊 更新方向 Upgrade</strong>
+                        <div style="margin-top: 10px;">
+                            <div style="margin-bottom: 10px;">
+                                <strong style="color: #C9960C;">舊模式</strong>: ${q.oldModel}
+                            </div>
+                            <div>
+                                <strong style="color: #0A7A72;">新模式</strong>: ${q.newModel}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="options-container">
+                        ${q.options.map((option, idx) => {
+                            // Split option into Chinese and English parts
+                            const parts = option.split(' ');
+                            const lastPart = parts[parts.length - 1];
+                            let optionEn = '';
+                            let optionZh = option;
+                            
+                            // Try to identify English part
+                            if (lastPart && /^[A-Za-z\s]+$/.test(lastPart)) {
+                                optionEn = lastPart;
+                                optionZh = parts.slice(0, -1).join(' ');
+                            }
+                            
+                            return `
+                                <div class="option" onclick="selectOption(${idx})">
+                                    <input type="radio" name="q${q.id}" value="${idx}" 
+                                        ${userResponses[q.id] === idx ? 'checked' : ''}>
+                                    <label style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                                        <span>${option}</span>
+                                        ${optionEn ? `<button onclick="event.stopPropagation(); speakText('${optionEn.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; flex-shrink: 0;">🔊</button>` : ''}
+                                    </label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update progress
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectOption(optionIndex) {
+            userResponses[questions[currentQuestionIndex].id] = optionIndex;
+            // Re-highlight
+            document.querySelectorAll('.option').forEach((el, idx) => {
+                if (idx === optionIndex) {
+                    el.classList.add('selected');
+                    el.querySelector('input').checked = true;
+                } else {
+                    el.classList.remove('selected');
+                    el.querySelector('input').checked = false;
+                }
+            });
+            updateButtons();
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completed = Object.keys(userResponses).length;
+            const progress = (completed / 100) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completed}/100`;
+        }
+
+        function updateButtons() {
+            const currentQ = questions[currentQuestionIndex];
+            const hasAnswer = userResponses[currentQ.id] !== undefined;
+            document.getElementById('nextBtn').disabled = !hasAnswer;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function submitAssessment() {
+            if (Object.keys(userResponses).length < 100) {
+                alert('請完成所有100題才能提交 Please complete all 100 questions');
+                return;
+            }
+
+            // Calculate results
+            const results = calculateResults();
+            
+            // Save to history
+            const timestamp = new Date().toLocaleString('zh-TW');
+            assessmentHistory.push({
+                timestamp,
+                responses: {...userResponses},
+                results
+            });
+
+            // Save to localStorage
+            localStorage.setItem('assessmentHistory', JSON.stringify(assessmentHistory));
+
+            // Update home screen
+            displayHomeResults(results);
+            switchScreen('home');
+            alert('✅ 診斷完成！Assessment submitted! Check your results on the Home screen.');
+        }
+
+        function calculateResults() {
+            const dimensions = {};
+            const scores = {};
+
+            // Aggregate responses by dimension
+            questions.forEach(q => {
+                if (!dimensions[q.dimension]) {
+                    dimensions[q.dimension] = [];
+                }
+                dimensions[q.dimension].push(userResponses[q.id] || 0);
+            });
+
+            // Calculate scores
+            for (let dim in dimensions) {
+                const avg = dimensions[dim].reduce((a, b) => a + b, 0) / dimensions[dim].length;
+                scores[dim] = Math.round(avg * 20); // Scale to 0-100
+            }
+
+            return {
+                dimensions,
+                scores,
+                totalScore: Object.values(scores).reduce((a, b) => a + b, 0),
+                topStrengths: Object.entries(scores)
+                    .sort(([, a], [, b]) => b - a)
+                    .slice(0, 3)
+                    .map(([dim, score]) => `${dim}: ${score}`),
+                bottlenecks: Object.entries(scores)
+                    .sort(([, a], [, b]) => a - b)
+                    .slice(0, 3)
+                    .map(([dim, score]) => `${dim}: ${score}`),
+                coreDimension: Object.entries(scores).sort(([, a], [, b]) => b - a)[0][0]
+            };
+        }
+
+        function displayHomeResults(results) {
+            const completed = Object.keys(userResponses).length;
+            document.getElementById('homeProgress').textContent = `${completed}/100`;
+            document.getElementById('homeScore').textContent = results.totalScore;
+            document.getElementById('coreDimension').textContent = results.coreDimension || '-';
+
+            const strengthsList = document.getElementById('strengthsList');
+            strengthsList.innerHTML = results.topStrengths
+                .map(s => `<li>${s}</li>`)
+                .join('');
+
+            const bottlenecksList = document.getElementById('bottlenecksList');
+            bottlenecksList.innerHTML = results.bottlenecks
+                .map(s => `<li>${s}</li>`)
+                .join('');
+        }
+
+        function displayMaps() {
+            if (Object.keys(userResponses).length === 0) {
+                document.getElementById('mapsContainer').innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <h3>完成診斷後查看</h3>
+                        <p>需要完成100題診斷才能生成您的人性地圖</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const results = calculateResults();
+            const mapTypes = [
+                { id: 'need', zh: '需求地圖', en: 'Need Map', icon: '🎯' },
+                { id: 'value', zh: '價值排序', en: 'Value Map', icon: '💎' },
+                { id: 'belief', zh: '信念地圖', en: 'Belief Map', icon: '🧠' },
+                { id: 'identity', zh: '身份地圖', en: 'Identity Map', icon: '🪞' },
+                { id: 'emotion', zh: '情緒地圖', en: 'Emotion Map', icon: '❤️' },
+                { id: 'relationship', zh: '關係地圖', en: 'Relationship Map', icon: '🤝' },
+                { id: 'capability', zh: '能力地圖', en: 'Capability Map', icon: '⚡' },
+                { id: 'mission', zh: '使命地圖', en: 'Mission Map', icon: '🚀' }
+            ];
+
+            document.getElementById('mapsContainer').innerHTML = mapTypes
+                .map(map => `
+                    <div class="map-card" onclick="toggleMap(this)">
+                        <div class="map-title">
+                            <span>${map.icon}</span>
+                            <div>
+                                <div>${map.zh}</div>
+                                <div style="font-size: 14px; font-weight: 400; color: #6B7280;">${map.en}</div>
+                            </div>
+                        </div>
+                        <div class="map-subtitle">點擊展開 Click to expand</div>
+                        <div class="map-content">
+                            <ul class="map-items">
+                                ${generateMapItems(map.id, results).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `)
+                .join('');
+        }
+
+        function generateMapItems(mapId, results) {
+            const items = [];
+            
+            if (mapId === 'need') {
+                items.push(`<li><span class="map-label">核心需求</span><span class="map-value">${results.coreDimension}</span></li>`);
+                items.push(`<li><span class="map-label">優先發展</span><span class="map-value">${results.topStrengths[0]}</span></li>`);
+            } else if (mapId === 'value') {
+                results.topStrengths.forEach((s, i) => {
+                    items.push(`<li><span class="map-label">價值 ${i+1}</span><span class="map-value">${s}</span></li>`);
+                });
+            } else if (mapId === 'belief') {
+                items.push(`<li><span class="map-label">核心信念</span><span class="map-value">成長型心態</span></li>`);
+                items.push(`<li><span class="map-label">限制信念</span><span class="map-value">待升級</span></li>`);
+            } else {
+                items.push(`<li><span class="map-label">評分</span><span class="map-value">${results.totalScore}</span></li>`);
+                items.push(`<li><span class="map-label">狀態</span><span class="map-value">已診斷</span></li>`);
+            }
+            
+            return items;
+        }
+
+        function toggleMap(element) {
+            element.classList.toggle('expanded');
+        }
+
+        function displayCapabilityMap() {
+            if (Object.keys(userResponses).length === 0) {
+                document.getElementById('capabilityContainer').innerHTML = `
+                    <div class="empty-state">
+                        <h3>完成診斷後查看</h3>
+                        <p>需要完成100題診斷才能生成您的能力升級地圖</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const capabilities = [
+                { name: '自燃力', zh: '自我驅動', en: 'Self-motivation', score: 75 },
+                { name: '忍功力', zh: '延遲滿足', en: 'Delayed gratification', score: 68 },
+                { name: '破局力', zh: '問題解決', en: 'Problem-solving', score: 82 },
+                { name: '開局力', zh: '新局開創', en: 'Initiative-taking', score: 71 }
+            ];
+
+            const html = capabilities.map(cap => `
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>${cap.name} - ${cap.zh}</span>
+                        <span class="collapsible-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p><strong>英文: </strong>${cap.en}</p>
+                        <p><strong>評分: </strong><span style="color: #C9960C; font-size: 20px; font-weight: 700;">${cap.score}/100</span></p>
+                        <p><strong>升級建議:</strong></p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>每天練習 5 分鐘冥想或自我反思</li>
+                            <li>設定 1 個小目標並完成它</li>
+                            <li>記錄每日進展</li>
+                            <li>每週回顧並調整策略</li>
+                        </ul>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('capabilityContainer').innerHTML = html;
+
+            // Add collapsible functionality
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('active');
+                });
+            });
+        }
+
+        function displayAllQuestions() {
+            const container = document.getElementById('libraryContainer');
+            
+            const html = questions.map(q => {
+                const functionEnglish = q.function.split('|')[1]?.trim() || '';
+                const purposeEnglish = q.purpose.split('|')[1]?.trim() || '';
+                
+                return `
+                <div class="collapsible" style="margin-bottom: 15px;">
+                    <div class="collapsible-header">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; font-size: 18px; color: #1A2B5F;">
+                                Q${q.id.toString().padStart(3, '0')} | ${q.zh}
+                            </div>
+                            <div style="font-size: 14px; color: #6B7280; margin-top: 5px; font-weight: 400; display: flex; align-items: center; gap: 8px;">
+                                <span>${q.en}</span>
+                                <button onclick="event.stopPropagation(); speakText('${q.en.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 14px; padding: 0;">🔊</button>
+                            </div>
+                        </div>
+                        <span class="collapsible-icon" style="flex-shrink: 0; margin-left: 15px;">▼</span>
+                    </div>
+                    <div class="collapsible-content" style="padding: 20px; background: var(--white);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div style="background: #F9F8F6; padding: 15px; border-radius: 6px; border-left: 3px solid #C9960C;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <strong style="display: block; color: #C9960C; font-size: 14px; text-transform: uppercase;">🎯 功能 Function</strong>
+                                    ${functionEnglish ? `<button onclick="speakText('${functionEnglish.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>` : ''}
+                                </div>
+                                <div style="font-size: 16px; color: #2C3E50; line-height: 1.6;">${q.function}</div>
+                            </div>
+                            <div style="background: #F9F8F6; padding: 15px; border-radius: 6px; border-left: 3px solid #0A7A72;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <strong style="display: block; color: #0A7A72; font-size: 14px; text-transform: uppercase;">💡 本質 Purpose</strong>
+                                    ${purposeEnglish ? `<button onclick="speakText('${purposeEnglish.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>` : ''}
+                                </div>
+                                <div style="font-size: 16px; color: #2C3E50; line-height: 1.6;">${q.purpose}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #F9F8F6; padding: 20px; border-radius: 6px; margin-bottom: 15px;">
+                            <strong style="display: block; font-size: 16px; color: #1A2B5F; margin-bottom: 15px;">📊 升級方向 Upgrade Path</strong>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                <div>
+                                    <div style="font-size: 14px; color: #6B7280; text-transform: uppercase; font-weight: 700; margin-bottom: 8px;">❌ 舊模式 Old Model</div>
+                                    <div style="font-size: 16px; color: #C9960C; line-height: 1.6; font-weight: 500;">${q.oldModel}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 14px; color: #6B7280; text-transform: uppercase; font-weight: 700; margin-bottom: 8px;">✅ 新模式 New Model</div>
+                                    <div style="font-size: 16px; color: #0A7A72; line-height: 1.6; font-weight: 500;">${q.newModel}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(10, 122, 114, 0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #0A7A72;">
+                            <strong style="display: block; color: #0A7A72; font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">📋 選項 Options</strong>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                ${q.options.map((opt, idx) => {
+                                    // Extract English part
+                                    const parts = opt.split(' ');
+                                    const lastPart = parts[parts.length - 1];
+                                    let optEn = '';
+                                    if (lastPart && /^[A-Za-z\s]+$/.test(lastPart)) {
+                                        optEn = lastPart;
+                                    }
+                                    
+                                    return `
+                                        <div style="font-size: 14px; color: #2C3E50; padding: 8px; background: var(--white); border-radius: 4px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                            <span><span style="font-weight: 600; color: #0A7A72;">[${idx + 1}]</span> ${opt}</span>
+                                            ${optEn ? `<button onclick="speakText('${optEn.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0; flex-shrink: 0;">🔊</button>` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+
+            container.innerHTML = html;
+
+            // Add collapsible functionality
+            document.querySelectorAll('#libraryContainer .collapsible-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('active');
+                });
+            });
+        }
+
+        function displayModules() {
+            const container = document.getElementById('modulesContainer');
+            
+            // Debug: Check how many questions we have
+            console.log(`Total questions in array: ${questions.length}`);
+            
+            const html = modules.map(mod => {
+                // Get the questions for this module
+                const moduleQuestions = mod.questions.map(qId => {
+                    const q = questions.find(question => question.id === qId);
+                    if (!q) {
+                        console.warn(`Question ${qId} not found in questions array`);
+                        return {
+                            id: qId,
+                            zh: '題目未找到',
+                            en: 'Question not found'
+                        };
+                    }
+                    return q;
+                });
+                
+                return `
+                <div class="collapsible" style="margin-bottom: 15px;">
+                    <div class="collapsible-header">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; font-size: 18px; color: #1A2B5F;">
+                                ${mod.icon} ${mod.id} | ${mod.name}
+                            </div>
+                            <div style="font-size: 14px; color: #6B7280; margin-top: 5px; font-weight: 400; display: flex; align-items: center; gap: 8px;">
+                                <span>${mod.en}</span>
+                                <button onclick="event.stopPropagation(); speakText('${mod.en.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 14px; padding: 0;">🔊</button>
+                            </div>
+                        </div>
+                        <span class="collapsible-icon" style="flex-shrink: 0; margin-left: 15px;">▼</span>
+                    </div>
+                    <div class="collapsible-content" style="padding: 20px; background: var(--white);">
+                        <div style="background: #F9F8F6; padding: 15px; border-radius: 6px; border-left: 4px solid #C9960C; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <strong style="display: block; color: #C9960C; font-size: 14px; text-transform: uppercase;">🎯 目標 Objective</strong>
+                                <button onclick="speakText('${mod.objective.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>
+                            </div>
+                            <div style="font-size: 16px; color: #2C3E50; line-height: 1.6; font-weight: 500;">${mod.objective}</div>
+                        </div>
+                        
+                        <div style="background: #F9F8F6; padding: 15px; border-radius: 6px; border-left: 4px solid #0A7A72; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <strong style="display: block; color: #0A7A72; font-size: 14px; text-transform: uppercase;">📖 深入理解 Deep Explanation</strong>
+                                <button onclick="speakText('${mod.detailedDesc.replace(/'/g, "\\'").substring(0, 200)}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>
+                            </div>
+                            <div style="font-size: 15px; color: #2C3E50; line-height: 1.8;">${mod.detailedDesc}</div>
+                        </div>
+                        
+                        <div style="background: rgba(10, 122, 114, 0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #0A7A72; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <strong style="display: block; color: #0A7A72; font-size: 14px; text-transform: uppercase;">💡 更新策略 Update Strategy</strong>
+                                <button onclick="speakText('${mod.updateStrategy.replace(/'/g, "\\'").substring(0, 200)}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>
+                            </div>
+                            <div style="font-size: 15px; color: #2C3E50; line-height: 1.8;">${mod.updateStrategy}</div>
+                        </div>
+                        
+                        <div style="background: rgba(201, 150, 12, 0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #C9960C; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <strong style="display: block; color: #C9960C; font-size: 14px; text-transform: uppercase;">✅ 今日行動 Today's Action</strong>
+                                <button onclick="speakText('${mod.action.replace(/'/g, "\\'").substring(0, 200)}')" style="background: none; border: none; cursor: pointer; font-size: 12px; padding: 0;">🔊</button>
+                            </div>
+                            <div style="font-size: 15px; color: #2C3E50; line-height: 1.8;">${mod.action}</div>
+                        </div>
+                        
+                        ${mod.questions && mod.questions.length > 0 ? `
+                            <div style="background: #F9F8F6; padding: 15px; border-radius: 6px; border-left: 4px solid #1A2B5F;">
+                                <strong style="display: block; color: #1A2B5F; font-size: 14px; text-transform: uppercase; margin-bottom: 12px;">📋 對應題號 Related Questions (${mod.questions.length}題)</strong>
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                                    ${moduleQuestions.map(q => `
+                                        <div style="background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 12px; hover: cursor: pointer; transition: all 0.2s;">
+                                            <div style="display: flex; align-items: flex-start; gap: 12px; justify-content: space-between;">
+                                                <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                                                    <span style="display: inline-block; background: #1A2B5F; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; white-space: nowrap; margin-top: 2px;">Q${q.id.toString().padStart(3, '0')}</span>
+                                                    <div style="flex: 1;">
+                                                        <div style="font-weight: 600; color: #2C3E50; font-size: 15px; margin-bottom: 4px;">${q.zh}</div>
+                                                        <div style="font-size: 13px; color: #6B7280; font-style: italic;">${q.en}</div>
+                                                    </div>
+                                                </div>
+                                                <button onclick="event.stopPropagation(); speakText('${q.en.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; flex-shrink: 0;">🔊</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `}).join('');
+
+            container.innerHTML = html;
+
+            // Add collapsible functionality
+            document.querySelectorAll('#modulesContainer .collapsible-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('active');
+                });
+            });
+        }
+
+        function displayMapping() {
+            const container = document.getElementById('mappingContainer');
+            
+            // Group questions by module for easier display
+            const moduleToQuestions = {};
+            modules.forEach(mod => {
+                moduleToQuestions[mod.id] = [];
+            });
+            
+            Object.entries(questionModuleMap).forEach(([qId, mIds]) => {
+                mIds.forEach(mId => {
+                    if (moduleToQuestions[mId]) {
+                        moduleToQuestions[mId].push(parseInt(qId));
+                    }
+                });
+            });
+
+            const html = questions.map(q => {
+                const relatedModules = questionModuleMap[q.id] || [];
+                const moduleDetails = relatedModules.map(mId => {
+                    const mod = modules.find(m => m.id === mId);
+                    return mod ? `<span style="display: inline-block; background: #0A7A72; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; margin-right: 6px; margin-bottom: 6px;">${mod.icon} ${mod.id}</span>` : '';
+                }).join('');
+                
+                return `
+                    <div class="collapsible" style="margin-bottom: 12px;">
+                        <div class="collapsible-header" style="padding: 16px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 16px; color: #1A2B5F;">
+                                    Q${q.id.toString().padStart(3, '0')} | ${q.zh}
+                                </div>
+                            </div>
+                            <span class="collapsible-icon" style="flex-shrink: 0; margin-left: 15px;">▼</span>
+                        </div>
+                        <div class="collapsible-content" style="padding: 16px; background: var(--white);">
+                            <div style="margin-bottom: 12px;">
+                                <strong style="display: block; color: #0A7A72; font-size: 13px; text-transform: uppercase; margin-bottom: 10px;">📌 對應模組 Related Modules</strong>
+                                ${moduleDetails || '<span style="color: #6B7280;">暫無模組對應</span>'}
+                            </div>
+                            <div style="border-top: 1px solid var(--border); padding-top: 12px;">
+                                <div style="font-size: 14px; color: #2C3E50; line-height: 1.6;">
+                                    <strong>英文：</strong> 
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                        <span>${q.en}</span>
+                                        <button onclick="speakText('${q.en.replace(/'/g, "\\'")}')" style="background: none; border: none; cursor: pointer; font-size: 14px; padding: 0; flex-shrink: 0;">🔊</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html;
+
+            // Add collapsible functionality
+            document.querySelectorAll('#mappingContainer .collapsible-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('active');
+                });
+            });
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
