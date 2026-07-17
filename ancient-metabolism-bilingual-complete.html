@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遠古代謝健康 - 完全雙語完整版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+            background: white;
+            color: #0D1B3E;
+        }
+        
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+            color: white;
+            padding: 24px 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        header h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        header .en-title {
+            font-size: 28px;
+            font-style: italic;
+            opacity: 0.95;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .search-bar {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 24px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-bar input {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            border-right: 2px solid #e0e0e0;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #0D1B3E;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .chapter-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin: 4px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            text-align: left;
+            transition: all 0.3s;
+            color: #333;
+        }
+        
+        .chapter-btn:hover {
+            background: #006B7D;
+            color: white;
+            border-color: #006B7D;
+            transform: translateX(2px);
+        }
+        
+        .chapter-btn.active {
+            background: #0D1B3E;
+            color: white;
+            border-color: #0D1B3E;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0D1B3E;
+            margin-bottom: 4px;
+            border-bottom: 3px solid #B8860B;
+            padding-bottom: 6px;
+        }
+        
+        .section-title-en {
+            font-size: 16px;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-intro {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .section-intro-en {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .section-intro-en .tts-btn {
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .grid-1col {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            border-color: #006B7D;
+            box-shadow: 0 4px 12px rgba(0, 107, 125, 0.12);
+            transform: translateY(-1px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .card-titles {
+            flex: 1;
+        }
+        
+        .card-title-cn {
+            font-size: 15px;
+            font-weight: bold;
+            color: #0D1B3E;
+            margin-bottom: 2px;
+        }
+        
+        .card-title-en {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .expand-icon {
+            font-size: 16px;
+            color: #006B7D;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        
+        .card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .card-content {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .card.expanded .card-content {
+            display: block;
+        }
+        
+        .bilingual-section {
+            margin: 8px 0;
+            padding: 8px;
+            background: #f9f9f9;
+            border-radius: 3px;
+        }
+        
+        .label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #006B7D;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 2px;
+        }
+        
+        .text-cn {
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+        
+        .text-en {
+            font-size: 12px;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 6px;
+            line-height: 1.5;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        
+        .text-en-content {
+            flex: 1;
+        }
+        
+        .tts-btn {
+            background: #B8860B;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .tts-btn:hover {
+            background: #C9960C;
+        }
+        
+        .tts-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .system-comparison {
+            background: #f5f9fc;
+            border-left: 3px solid #006B7D;
+            padding: 8px;
+            border-radius: 3px;
+            margin: 6px 0;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .legend {
+            background: #f0f8ff;
+            border: 1px solid #006B7D;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            color: #0D1B3E;
+            margin-bottom: 6px;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #006B7D;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0D1B3E;
+        }
+        
+        @media (max-width: 1200px) {
+            main {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+                display: flex;
+                gap: 20px;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+            
+            .sidebar-section {
+                flex-shrink: 0;
+                width: auto;
+            }
+            
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>遠古代謝健康</h1>
+                    <div class="en-title">Ancestral Metabolism Health</div>
+                    <p>人體生命網路完整地圖 × 99項產品完整對應<br>
+                    Complete Human Life Network Map × 99 Products Comprehensive Mapping</p>
+                </div>
+                <div class="search-bar">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="搜尋 / Search...">
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">📚 CHAPTERS 1-5</div>
+                    <button class="chapter-btn active" data-chapter="ch1">9大系統</button>
+                    <button class="chapter-btn" data-chapter="ch2">99項產品</button>
+                    <button class="chapter-btn" data-chapter="ch3">9大分類</button>
+                    <button class="chapter-btn" data-chapter="ch5">9大穩態</button>
+                    <button class="chapter-btn" data-chapter="ch6">12大修復</button>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">🧬 CHAPTERS 6-10</div>
+                    <button class="chapter-btn" data-chapter="ch7">15大生存</button>
+                    <button class="chapter-btn" data-chapter="ch8">20大網路</button>
+                    <button class="chapter-btn" data-chapter="ch10">30大生命</button>
+                    <button class="chapter-btn" data-chapter="ch11">40條路徑</button>
+                    <button class="chapter-btn" data-chapter="ch12">50個節點</button>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">📊 CHAPTERS 11-15</div>
+                    <button class="chapter-btn" data-chapter="ch13">60大能力</button>
+                    <button class="chapter-btn" data-chapter="ch14">70大標誌</button>
+                    <button class="chapter-btn" data-chapter="ch15">80個節點</button>
+                </div>
+            </aside>
+            
+            <div class="content" id="mainContent">
+                <!-- Content renders here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const chapterData = {
+            ch1: {
+                titleCn: '第一章｜遠古代謝健康 × 9大代謝系統',
+                titleEn: 'Chapter 1 | Ancestral Metabolism Health × 9 Metabolic Systems',
+                introCn: '真正的健康，是身體仍然保有高效率的能量代謝能力',
+                introEn: 'True health is when the body still retains efficient energy metabolism capacity',
+                systems: [
+                    { cn: '原型飲食系統', en: 'Ancestral Diet System', descCn: '提供細胞真正需要的原料', descEn: 'Provides raw materials cells truly need', productsCn: 'EPA+DHA粉包、亞麻仁油、亞麻仁籽渣、辣木粉、憂遁草粉、大補王', purposeCn: '支持細胞膜健康、粒線體功能、正常代謝', purposeEn: 'Supports cell membrane health, mitochondrial function, normal metabolism' },
+                    { cn: '蛋白質系統', en: 'Protein System', descCn: '蛋白質是修復材料', descEn: 'Protein is repair material', productsCn: '大補王、胺基酸可可粉、全酶、消化粉', purposeCn: '支持組織修復、免疫生成、酵素生成', purposeEn: 'Supports tissue repair, immune generation, enzyme production' },
+                    { cn: '健康脂肪系統', en: 'Healthy Fat System', descCn: '脂肪不是敵人，壞脂肪才是敵人', descEn: 'Fat is not the enemy, bad fat is', productsCn: 'EPA+DHA、亞麻仁油、美寶、EGCG', purposeCn: '支持健康發炎反應、細胞膜流動性、心血管健康', purposeEn: 'Supports healthy inflammation, cell fluidity, cardiovascular health' },
+                    { cn: '粒線體能量系統', en: 'Mitochondrial Energy System', descCn: '真正決定體力的，不是意志力，而是粒線體', descEn: 'What determines stamina is mitochondria, not willpower', productsCn: 'Q10、NMN、粒線寶、B群', purposeCn: '支持ATP生成、電子傳遞鏈、能量代謝', purposeEn: 'Supports ATP generation, electron transport, energy metabolism' },
+                    { cn: '血糖代謝系統', en: 'Glucose Metabolism System', descCn: '真正造成老化的，不是糖，而是長期高胰島素', descEn: 'Aging is caused by chronic high insulin, not sugar', productsCn: '甘速淨、苦瓜皂苷、黃連素、TMG', purposeCn: '支持正常醣類代謝、胰島素敏感性、脂肪代謝', purposeEn: 'Supports normal glucose metabolism, insulin sensitivity, fat metabolism' },
+                    { cn: '腸道代謝系統', en: 'Gut Metabolism System', descCn: '七成以上免疫功能與腸道有關', descEn: 'Over 70% of immune function relates to gut', productsCn: '腸寶、孢子益生菌、丁酸鈉、三丁酸甘油', purposeCn: '支持菌相平衡、腸道屏障、消化吸收', purposeEn: 'Supports microbiome balance, gut barrier, digestion' },
+                    { cn: '抗氧化系統', en: 'Antioxidant System', descCn: '真正需要降低的，不是氧氣，而是過量氧化壓力', descEn: 'Reduce oxidative stress, not oxygen', productsCn: 'NAC、美寶、EGCG、蝦紅素、蜂膠', purposeCn: '支持細胞抗氧化能力、穀胱甘肽系統、免疫功能', purposeEn: 'Supports cellular antioxidant capacity, glutathione system, immunity' },
+                    { cn: '循環系統', en: 'Circulation System', descCn: '循環越好，氧氣越容易送到細胞', descEn: 'Better circulation delivers oxygen to cells', productsCn: '血循環、氣循環、地龍蛋白、銀杏', purposeCn: '支持正常循環、組織供氧、身體修復', purposeEn: 'Supports circulation, tissue oxygenation, body repair' },
+                    { cn: '恢復系統', en: 'Recovery System', descCn: '真正修復，發生在睡眠', descEn: 'True repair happens during sleep', productsCn: '甘氨酸鎡、GABA、青春方', purposeCn: '支持放鬆、睡眠品質、夜間恢復', purposeEn: 'Supports relaxation, sleep quality, nighttime recovery' }
+                ]
+            },
+            ch2: {
+                titleCn: '第二章｜99項團購產品 × 完整對應',
+                titleEn: 'Chapter 2 | 99 Group Purchase Products × Complete Mapping',
+                introCn: '真正好的營養，不是吃最多，而是補足自己目前最大的限制',
+                introEn: 'Good nutrition fills your biggest deficiency, not maximizes quantity',
+                products: [
+                    { num: '001', name: 'EPA+DHA粉包', en: 'EPA+DHA Powder', price: 'NT$1,350' },
+                    { num: '002', name: '甘速淨', en: 'Blood Sugar Balance', price: 'NT$1,500' },
+                    { num: '003', name: '酵母鋅+核酸', en: 'Yeast Zinc+Nucleic Acid', price: 'NT$550' },
+                    { num: '004', name: '三丁酸甘油', en: 'Tributyrin', price: 'NT$680' },
+                    { num: '005', name: '丁酸鈉複合包', en: 'Sodium Butyrate Complex', price: 'NT$890' },
+                    { num: '006', name: '腸寶', en: 'Gut Treasure', price: 'NT$485' },
+                    { num: '007', name: '孢子益生菌', en: 'Spore Probiotics', price: 'NT$650' },
+                    { num: '008', name: '5R腸胃營養素', en: '5R Gut Nutrients', price: 'NT$750' }
+                ]
+            },
+            ch3: {
+                titleCn: '第三章｜99項產品 × 9大健康系統完整分類',
+                titleEn: 'Chapter 3 | 99 Products × 9 Health Systems Classification',
+                introCn: '真正的健康，來自系統合作，不是單一產品',
+                introEn: 'True health comes from system cooperation, not single products',
+                systems: [
+                    { cn: '粒線體能量系統', en: 'Mitochondrial Energy System', 缺乏: '容易疲勞、腦霧、恢復慢', 缺乏En: 'Easy fatigue, brain fog, slow recovery', products: 'Q10、NMN、粒線寶、B群、能量方' },
+                    { cn: '免疫系統', en: 'Immune System', 缺乏: '容易感冒、恢復慢、反覆感染', 缺乏En: 'Frequent colds, slow recovery, recurring infection', products: '酵母鋅、D3、酶菌醣體、巴西蘑菇、蜂膠' },
+                    { cn: '腸道系統', en: 'Gut System', 缺乏: '便秘、腹脹、腸漏、消化差', 缺乏En: 'Constipation, bloating, leaky gut, poor digestion', products: '腸寶、孢子益生菌、丁酸鈉、三丁酸甘油、5R' },
+                    { cn: '血糖代謝系統', en: 'Glucose Metabolism System', 缺乏: '血糖波動、飯後想睡、脂肪肝', 缺乏En: 'Blood sugar fluctuation, post-meal sleepiness, fatty liver', products: '甘速淨、苦瓜皂苷、黃連素、TMG' },
+                    { cn: '抗氧化系統', en: 'Antioxidant System', 缺乏: '容易疲勞、慢性發炎、老化加快', 缺乏En: 'Easy fatigue, chronic inflammation, accelerated aging', products: 'EGCG、美寶、NAC、蝦紅素、蜂膠' },
+                    { cn: '循環系統', en: 'Circulation System', 缺乏: '手腳冰冷、頭暈、恢復慢', 缺乏En: 'Cold extremities, dizziness, slow recovery', products: '血循環、氣循環、地龍蛋白、銀杏、EPA' },
+                    { cn: '神經系統', en: 'Neural System', 缺乏: '焦慮、失眠、腦霧、注意力下降', 缺乏En: 'Anxiety, insomnia, brain fog, decreased focus', products: '甘氨酸鎡、GABA、神經營養素、銀杏、清思油' },
+                    { cn: '肝臟解毒系統', en: 'Liver Detox System', 缺乏: '疲勞、消化差、代謝變慢', 缺乏En: 'Fatigue, poor digestion, slowed metabolism', products: '肝寶、NAC、EGCG、黃連素' },
+                    { cn: '睡眠修復系統', en: 'Sleep Repair System', 缺乏: '淺眠、半夜醒、恢復差', 缺乏En: 'Shallow sleep, midnight awakening, poor recovery', products: '甘氨酸鎡、GABA、青春方、接地枕頭' }
+                ]
+            },
+            ch5: {
+                titleCn: '第五章｜遠古代謝健康 × 9大穩態系統',
+                titleEn: 'Chapter 5 | Ancestral Metabolism Health × 9 Homeostasis Systems',
+                introCn: '穩態失衡，疾病開始。穩態恢復，修復開始',
+                introEn: 'Homeostasis imbalance begins disease. Homeostasis recovery begins repair',
+                systems: [
+                    { cn: '血糖穩態', en: 'Glucose Homeostasis', targetCn: '維持穩定血糖', targetEn: 'Maintain stable glucose', failCn: '飯後疲倦、肚子容易餓、脂肪肝', failEn: 'Post-meal fatigue, frequent hunger, fatty liver', strategyCn: '少精製糖、餐後散步、阻力訓練', strategyEn: 'Reduce refined sugar, post-meal walking, resistance training' },
+                    { cn: '發炎穩態', en: 'Inflammatory Homeostasis', targetCn: '維持健康發炎反應', targetEn: 'Maintain healthy inflammation', failCn: '慢性疼痛、關節不適、疲勞', failEn: 'Chronic pain, joint discomfort, fatigue', strategyCn: 'Omega-3、天然飲食、睡眠', strategyEn: 'Omega-3, natural diet, sleep' },
+                    { cn: '氧化壓力穩態', en: 'Redox Homeostasis', targetCn: '自由基與抗氧化平衡', targetEn: 'Balance free radicals and antioxidants', failCn: '老化、疲勞、細胞損傷增加', failEn: 'Aging, fatigue, increased cell damage', strategyCn: '天然蔬果、規律睡眠、避免抽菸', strategyEn: 'Natural produce, regular sleep, avoid smoking' },
+                    { cn: '粒線體穩態', en: 'Mitochondrial Homeostasis', targetCn: '穩定ATP產生', targetEn: 'Stable ATP production', failCn: '沒有精神、恢復慢、容易疲勞', failEn: 'Lack of energy, slow recovery, easy fatigue', strategyCn: '阻力訓練、有氧運動、充足蛋白質', strategyEn: 'Resistance training, aerobic exercise, adequate protein' },
+                    { cn: '腸道穩態', en: 'Gut Homeostasis', targetCn: '維持菌相平衡與屏障', targetEn: 'Maintain microbiome balance and barrier', failCn: '腹脹、便秘、腹瀉、腸漏', failEn: 'Bloating, constipation, diarrhea, leaky gut', strategyCn: '高纖飲食、天然食物、發酵食物', strategyEn: 'High fiber diet, natural foods, fermented foods' },
+                    { cn: '免疫穩態', en: 'Immune Homeostasis', targetCn: '免疫正常辨識', targetEn: 'Normal immune recognition', failCn: '容易感染、恢復慢、免疫失衡', failEn: 'Easy infection, slow recovery, immune imbalance', strategyCn: '睡眠、運動、壓力管理', strategyEn: 'Sleep, exercise, stress management' },
+                    { cn: '神經穩態', en: 'Neural Homeostasis', targetCn: '神經平衡、副交感正常', targetEn: 'Neural balance, normal parasympathetic', failCn: '焦慮、腦霧、睡不好', failEn: 'Anxiety, brain fog, poor sleep', strategyCn: '深呼吸、冥想、規律睡眠', strategyEn: 'Deep breathing, meditation, regular sleep' },
+                    { cn: '荷爾蒙穩態', en: 'Hormonal Homeostasis', targetCn: '荷爾蒙協調', targetEn: 'Hormone coordination', failCn: '疲勞、睡不好、情緒波動', failEn: 'Fatigue, poor sleep, mood swings', strategyCn: '曬太陽、固定睡眠、減少熬夜', strategyEn: 'Sun exposure, fixed sleep, reduce late nights' },
+                    { cn: '循環穩態', en: 'Circulatory Homeostasis', targetCn: '正常循環與供氧', targetEn: 'Normal circulation and oxygenation', failCn: '頭暈、冰冷、疲勞', failEn: 'Dizziness, coldness, fatigue', strategyCn: '每天步行、肌力訓練、充足喝水', strategyEn: 'Daily walking, strength training, adequate hydration' }
+                ]
+            },
+            ch6: {
+                titleCn: '第六章｜遠古代謝健康 × 12大修復系統',
+                titleEn: 'Chapter 6 | Ancestral Metabolism Health × 12 Repair Systems',
+                introCn: '修復能力，才是真正的健康競爭力',
+                introEn: 'Repair capacity is true health competitiveness',
+                systems: [
+                    { num: '1', cn: '粒線體修復', en: 'Mitochondrial Repair', tips: '阻力訓練、有氧運動、睡眠、禁食', tipsEn: 'Resistance training, aerobic exercise, sleep, fasting' },
+                    { num: '2', cn: 'DNA修復', en: 'DNA Repair', tips: '睡眠、抗氧化、減少紫外線傷害', tipsEn: 'Sleep, antioxidants, reduce UV damage' },
+                    { num: '3', cn: '細胞膜修復', en: 'Cell Membrane Repair', tips: '天然脂肪、Omega-3補充', tipsEn: 'Natural fats, Omega-3 supplementation' },
+                    { num: '4', cn: '腸道屏障修復', en: 'Gut Barrier Repair', tips: '天然食物、高纖維、避免加工食品', tipsEn: 'Natural foods, high fiber, avoid processed' },
+                    { num: '5', cn: '免疫修復', en: 'Immune Repair', tips: '睡眠、運動、曬太陽', tipsEn: 'Sleep, exercise, sun exposure' },
+                    { num: '6', cn: '神經修復', en: 'Neural Repair', tips: '深睡眠、規律作息、學習新技能', tipsEn: 'Deep sleep, regular schedule, learn new skills' },
+                    { num: '7', cn: '血管修復', en: 'Vascular Repair', tips: '步行、阻力訓練、避免吸菸', tipsEn: 'Walking, resistance training, avoid smoking' },
+                    { num: '8', cn: '肝臟修復', en: 'Liver Repair', tips: '減少酒精、天然飲食、控制糖分', tipsEn: 'Reduce alcohol, natural diet, control sugar' },
+                    { num: '9', cn: '肌肉修復', en: 'Muscle Repair', tips: '阻力訓練、充足蛋白質', tipsEn: 'Resistance training, adequate protein' },
+                    { num: '10', cn: '抗氧化修復', en: 'Antioxidant Repair', tips: '天然蔬果、規律運動', tipsEn: 'Natural produce, regular exercise' },
+                    { num: '11', cn: '荷爾蒙修復', en: 'Hormonal Repair', tips: '固定睡眠、晨間日照、減少熬夜', tipsEn: 'Fixed sleep, morning sunlight, reduce late nights' },
+                    { num: '12', cn: '睡眠修復', en: 'Sleep Repair', tips: '減少藍光、固定睡眠、睡前停止進食', tipsEn: 'Reduce blue light, fixed sleep, stop eating before bed' }
+                ]
+            },
+            ch7: {
+                titleCn: '第七章｜遠古代謝健康 × 15大生存系統',
+                titleEn: 'Chapter 7 | Ancestral Metabolism Health × 15 Survival Systems',
+                introCn: '生命不是靠單一器官，而是十五大系統共同合作',
+                introEn: 'Life depends on 15 systems working together, not a single organ',
+                systems: [
+                    { cn: '能量系統', en: 'Energy System', purpose: '產生ATP、提供細胞能量', purposeEn: 'Generate ATP, provide cellular energy' },
+                    { cn: '營養系統', en: 'Nutrition System', purpose: '提供細胞修復原料', purposeEn: 'Provide cell repair materials' },
+                    { cn: '血糖系統', en: 'Glucose System', purpose: '穩定血糖、維持代謝彈性', purposeEn: 'Stabilize glucose, maintain metabolic flexibility' },
+                    { cn: '脂肪代謝系統', en: 'Lipid System', purpose: '燃燒脂肪、建立細胞膜', purposeEn: 'Burn fat, build cell membranes' },
+                    { cn: '免疫系統', en: 'Immune System', purpose: '辨識病原、辨識異常細胞', purposeEn: 'Recognize pathogens, identify abnormal cells' },
+                    { cn: '腸道系統', en: 'Gut System', purpose: '吸收營養、建立菌相', purposeEn: 'Absorb nutrients, establish microbiome' },
+                    { cn: '神經系統', en: 'Neural System', purpose: '協調全身、學習、記憶', purposeEn: 'Coordinate body, learning, memory' },
+                    { cn: '循環系統', en: 'Circulation System', purpose: '運送氧氣、運送營養', purposeEn: 'Transport oxygen, transport nutrients' },
+                    { cn: '呼吸系統', en: 'Respiratory System', purpose: '提供氧氣、排除二氧化碳', purposeEn: 'Provide oxygen, eliminate CO2' },
+                    { cn: '肝臟系統', en: 'Liver System', purpose: '解毒、代謝、膽汁生成', purposeEn: 'Detoxify, metabolize, bile production' },
+                    { cn: '荷爾蒙系統', en: 'Hormonal System', purpose: '協調全身代謝', purposeEn: 'Coordinate whole-body metabolism' },
+                    { cn: '睡眠系統', en: 'Sleep System', purpose: '夜間修復、免疫恢復', purposeEn: 'Nighttime repair, immune recovery' },
+                    { cn: '抗氧化系統', en: 'Antioxidant System', purpose: '維持氧化還原平衡', purposeEn: 'Maintain redox balance' },
+                    { cn: '骨骼肌系統', en: 'Muscle System', purpose: '儲存葡萄糖、提升代謝率', purposeEn: 'Store glucose, elevate metabolism' },
+                    { cn: '修復更新系統', en: 'Repair System', purpose: '每天更新細胞、維持穩態', purposeEn: 'Daily cell renewal, maintain homeostasis' }
+                ]
+            },
+            ch8: {
+                titleCn: '第八章｜遠古代謝健康 × 20大代謝網路',
+                titleEn: 'Chapter 8 | Ancestral Metabolism Health × 20 Metabolic Networks',
+                introCn: '每一秒，都有數百萬個生化反應同步發生',
+                introEn: 'Millions of biochemical reactions occur simultaneously every second',
+                systems: [
+                    { cn: '葡萄糖代謝', en: 'Glucose Metabolism', task: '產生快速能量', taskEn: 'Generate quick energy' },
+                    { cn: '脂肪酸代謝', en: 'Fatty Acid Metabolism', task: '燃燒脂肪', taskEn: 'Burn fat' },
+                    { cn: '蛋白質代謝', en: 'Protein Metabolism', task: '修復組織、建立肌肉', taskEn: 'Repair tissue, build muscle' },
+                    { cn: '粒線體呼吸鏈', en: 'Electron Transport Chain', task: 'ATP生成', taskEn: 'Generate ATP' },
+                    { cn: '抗氧化循環', en: 'Antioxidant Cycle', task: '維持氧化還原平衡', taskEn: 'Maintain redox balance' },
+                    { cn: '穀胱甘肽系統', en: 'Glutathione System', task: '清除自由基', taskEn: 'Remove free radicals' },
+                    { cn: '甲基化循環', en: 'Methylation Cycle', task: 'DNA調控、神經傳導', taskEn: 'DNA regulation, neural conduction' },
+                    { cn: '膽汁代謝', en: 'Bile Metabolism', task: '脂肪吸收', taskEn: 'Fat absorption' },
+                    { cn: '短鏈脂肪酸', en: 'SCFA Network', task: '支持腸道能量', taskEn: 'Support gut energy' },
+                    { cn: '腸道菌相', en: 'Microbiome Network', task: '維持菌相平衡', taskEn: 'Maintain microbiome balance' },
+                    { cn: '免疫辨識', en: 'Immune Recognition', task: '辨識病原、異常細胞', taskEn: 'Recognize pathogens, abnormal cells' },
+                    { cn: '發炎調節', en: 'Inflammation Regulation', task: '支持健康發炎反應', taskEn: 'Support healthy inflammation' },
+                    { cn: '神經傳導', en: 'Neural Transmission', task: '訊息傳遞', taskEn: 'Message transmission' },
+                    { cn: '睡眠修復', en: 'Sleep Repair Network', task: '夜間恢復', taskEn: 'Nighttime recovery' },
+                    { cn: '血管內皮', en: 'Vascular Endothelium', task: '維持血管功能', taskEn: 'Maintain vessel function' },
+                    { cn: '骨骼肌', en: 'Skeletal Muscle Network', task: '葡萄糖儲存、代謝', taskEn: 'Glucose storage, metabolism' },
+                    { cn: '荷爾蒙調節', en: 'Hormonal Regulation', task: '協調全身代謝', taskEn: 'Coordinate metabolism' },
+                    { cn: '礦物質平衡', en: 'Mineral Balance Network', task: '酵素活化、神經傳導', taskEn: 'Enzyme activation, neural conduction' },
+                    { cn: '細胞膜訊號', en: 'Cell Membrane Signaling', task: '細胞溝通', taskEn: 'Cell communication' },
+                    { cn: '自噬修復', en: 'Autophagy Network', task: '清除老化細胞、更新', taskEn: 'Remove old cells, renewal' }
+                ]
+            },
+            ch10: {
+                titleCn: '第十章｜遠古代謝健康 × 30大生命網路',
+                titleEn: 'Chapter 10 | Ancestral Metabolism Health × 30 Life Networks',
+                introCn: '生命是一張由數十萬個節點共同合作的網路',
+                introEn: 'Life is a network of hundreds of thousands of nodes working together',
+                systems: [
+                    { cn: '細胞能量網路', en: 'Cellular Energy Network' },
+                    { cn: '細胞膜網路', en: 'Cell Membrane Network' },
+                    { cn: '蛋白質網路', en: 'Protein Network' },
+                    { cn: '脂肪代謝網路', en: 'Fat Metabolism Network' },
+                    { cn: '葡萄糖代謝網路', en: 'Glucose Metabolism Network' },
+                    { cn: '粒線體品質網路', en: 'Mitochondrial Quality Network' },
+                    { cn: 'DNA修復網路', en: 'DNA Repair Network' },
+                    { cn: 'RNA蛋白合成', en: 'RNA Protein Synthesis Network' },
+                    { cn: '甲基化網路', en: 'Methylation Network' },
+                    { cn: '抗氧化網路', en: 'Antioxidant Network' },
+                    { cn: '穀胱甘肽網路', en: 'Glutathione Network' },
+                    { cn: '肝臟解毒網路', en: 'Liver Detoxification Network' },
+                    { cn: '腸道菌相網路', en: 'Gut Microbiome Network' },
+                    { cn: '短鏈脂肪酸', en: 'Short Chain Fatty Acid Network' },
+                    { cn: '免疫辨識網路', en: 'Immune Recognition Network' },
+                    { cn: '免疫調節網路', en: 'Immune Regulation Network' },
+                    { cn: '發炎調節網路', en: 'Inflammation Regulation Network' },
+                    { cn: '神經傳導網路', en: 'Neural Conduction Network' },
+                    { cn: '神經修復網路', en: 'Neural Repair Network' },
+                    { cn: '睡眠修復網路', en: 'Sleep Repair Network' },
+                    { cn: '循環網路', en: 'Circulation Network' },
+                    { cn: '微循環網路', en: 'Microcirculation Network' },
+                    { cn: '骨骼肌網路', en: 'Skeletal Muscle Network' },
+                    { cn: '荷爾蒙網路', en: 'Hormonal Network' },
+                    { cn: '礦物質網路', en: 'Mineral Network' },
+                    { cn: '骨骼關節網路', en: 'Bone Joint Network' },
+                    { cn: '皮膚修復網路', en: 'Skin Repair Network' },
+                    { cn: '眼腦健康網路', en: 'Eye Brain Health Network' },
+                    { cn: '呼吸防護網路', en: 'Respiratory Protection Network' },
+                    { cn: '長壽修復網路', en: 'Longevity Repair Network' }
+                ]
+            },
+            ch11: {
+                titleCn: '第十一章｜遠古代謝健康 × 40條生化路徑',
+                titleEn: 'Chapter 11 | Ancestral Metabolism Health × 40 Biochemical Pathways',
+                introCn: '每一秒都有數百萬個生化反應同步發生',
+                introEn: 'Millions of biochemical reactions occur simultaneously every second',
+                systems: [
+                    { num: '1', cn: '糖解作用', en: 'Glycolysis' },
+                    { num: '2', cn: '檸檬酸循環', en: 'TCA Cycle' },
+                    { num: '3', cn: '電子傳遞鏈', en: 'Electron Transport Chain' },
+                    { num: '4', cn: '脂肪酸β氧化', en: 'Fatty Acid Oxidation' },
+                    { num: '5', cn: '肝醣合成', en: 'Glycogenesis' },
+                    { num: '6', cn: '肝醣分解', en: 'Glycogenolysis' },
+                    { num: '7', cn: '糖質新生', en: 'Gluconeogenesis' },
+                    { num: '8', cn: '胺基酸代謝', en: 'Amino Acid Metabolism' },
+                    { num: '9', cn: '蛋白質合成', en: 'Protein Synthesis' },
+                    { num: '10', cn: '尿素循環', en: 'Urea Cycle' },
+                    { num: '11', cn: '膽固醇代謝', en: 'Cholesterol Metabolism' },
+                    { num: '12', cn: '膽汁酸代謝', en: 'Bile Acid Metabolism' },
+                    { num: '13', cn: '甲基化循環', en: 'Methylation Cycle' },
+                    { num: '14', cn: '葉酸循環', en: 'Folate Cycle' },
+                    { num: '15', cn: '穀胱甘肽生成', en: 'Glutathione Synthesis' },
+                    { num: '16', cn: 'NAD+循環', en: 'NAD+ Cycle' },
+                    { num: '17', cn: 'AMPK訊號', en: 'AMPK Signaling' },
+                    { num: '18', cn: 'mTOR訊號', en: 'mTOR Signaling' },
+                    { num: '19', cn: 'Sirtuin路徑', en: 'Sirtuin Pathway' },
+                    { num: '20', cn: '自噬', en: 'Autophagy' },
+                    { num: '21', cn: '腸道菌發酵', en: 'Gut Fermentation' },
+                    { num: '22', cn: '短鏈脂肪酸', en: 'SCFA Utilization' },
+                    { num: '23', cn: 'Omega-3代謝', en: 'Omega-3 Metabolism' },
+                    { num: '24', cn: '抗氧化循環', en: 'Antioxidant Cycle' },
+                    { num: '25', cn: '發炎調節', en: 'Inflammation Regulation' },
+                    { num: '26', cn: '免疫辨識', en: 'Immune Recognition' },
+                    { num: '27', cn: '免疫活化', en: 'Immune Activation' },
+                    { num: '28', cn: 'DNA修復', en: 'DNA Repair' },
+                    { num: '29', cn: 'RNA轉錄', en: 'RNA Transcription' },
+                    { num: '30', cn: '細胞膜更新', en: 'Cell Membrane Renewal' },
+                    { num: '31', cn: '神經傳導', en: 'Neural Conduction' },
+                    { num: '32', cn: '神經可塑性', en: 'Neuroplasticity' },
+                    { num: '33', cn: '血管內皮功能', en: 'Vascular Endothelium' },
+                    { num: '34', cn: '一氧化氮調節', en: 'Nitric Oxide Regulation' },
+                    { num: '35', cn: '荷爾蒙生成', en: 'Hormone Synthesis' },
+                    { num: '36', cn: '礦物質平衡', en: 'Mineral Balance' },
+                    { num: '37', cn: '膠原蛋白更新', en: 'Collagen Renewal' },
+                    { num: '38', cn: '睡眠修復', en: 'Sleep Repair' },
+                    { num: '39', cn: '壓力調節', en: 'Stress Regulation' },
+                    { num: '40', cn: '整體穩態', en: 'Overall Homeostasis' }
+                ]
+            },
+            ch12: {
+                titleCn: '第十二章｜遠古代謝健康 × 50個生命節點',
+                titleEn: 'Chapter 12 | Ancestral Metabolism Health × 50 Life Nodes',
+                introCn: '節點正常，網路正常。節點失衡，網路開始代償',
+                introEn: 'Normal nodes, normal networks. Unbalanced nodes, networks begin compensating',
+                systems: [
+                    { cn: '粒線體、NAD+、ATP、GLUT4、胰島素受體', en: 'Mitochondria, NAD+, ATP, GLUT4, Insulin Receptor' },
+                    { cn: 'AMPK、mTOR、SIRT1、PGC-1α、FOXO', en: 'AMPK, mTOR, SIRT1, PGC-1α, FOXO' },
+                    { cn: '穀胱甘肽、Nrf2、NF-κB、腸道菌相、丁酸', en: 'Glutathione, Nrf2, NF-κB, Microbiome, Butyrate' },
+                    { cn: '腸道屏障、消化酵素、胃酸、膽汁、肝臟', en: 'Gut Barrier, Digestive Enzymes, Stomach Acid, Bile, Liver' },
+                    { cn: '血管內皮、微循環、紅血球、神經元、突觸', en: 'Vascular Endothelium, Microcirculation, RBC, Neurons, Synapses' },
+                    { cn: '神經髓鞘、睡眠、褪黑激素、壓力、腎上腺', en: 'Myelin Sheath, Sleep, Melatonin, Stress, Adrenals' },
+                    { cn: '維生素D、鋅、鎂、Omega-3、茶多酚', en: 'Vitamin D, Zinc, Magnesium, Omega-3, Tea Polyphenols' },
+                    { cn: '白藜蘆醇、β-葡聚醣、人參皂苷、蜂膠、辣木', en: 'Resveratrol, Beta-Glucan, Ginseng Saponin, Propolis, Moringa' },
+                    { cn: '憂遁草、蝦紅素、關節、透明質酸、肌肉', en: 'Sauropus, Astaxanthin, Joints, Hyaluronic Acid, Muscle' },
+                    { cn: '骨骼、細胞膜、DNA、自噬、穩態', en: 'Bones, Cell Membrane, DNA, Autophagy, Homeostasis' }
+                ]
+            },
+            ch13: {
+                titleCn: '第十三章｜遠古代謝健康 × 60大生命能力',
+                titleEn: 'Chapter 13 | Ancestral Metabolism Health × 60 Life Abilities',
+                introCn: '疾病，本質不是多了一個疾病，而是少了一個能力',
+                introEn: 'Disease is not gaining a disease, but losing an ability',
+                abilities: [
+                    { num: '1-6', items: ['ATP生成能力', '粒線體更新能力', '葡萄糖利用能力', '胰島素敏感能力', '脂肪燃燒能力', '肌肉建立能力'] },
+                    { num: '7-12', items: ['肌肉修復能力', '組織更新能力', '消化能力', '吸收能力', '腸道屏障能力', '菌相平衡能力'] },
+                    { num: '13-18', items: ['短鏈脂肪酸生成', '解毒能力', '抗氧化能力', '穀胱甘肽生成', 'DNA修復能力', '細胞膜修復能力'] },
+                    { num: '19-24', items: ['發炎調節能力', '免疫辨識能力', '免疫調節能力', '免疫恢復能力', '神經傳導能力', '神經修復能力'] },
+                    { num: '25-30', items: ['記憶能力', '專注能力', '睡眠能力', '深睡能力', '壓力適應能力', '情緒穩定能力'] },
+                    { num: '31-36', items: ['血液循環能力', '微循環能力', '血管彈性能力', '氧氣運送能力', '骨骼健康能力', '關節潤滑能力'] },
+                    { num: '37-42', items: ['軟骨支持能力', '細胞通訊能力', '荷爾蒙平衡能力', '甲基化能力', '酵素活化能力', '礦物質平衡能力'] },
+                    { num: '43-48', items: ['自由基清除能力', '植化素保護能力', '呼吸支持能力', '黏膜保護能力', '肝醣儲存能力', '脂肪動員能力'] },
+                    { num: '49-54', items: ['自噬能力', '修復能力', '恢復能力', '抗老化能力', '視力支持能力', '皮膚修復能力'] },
+                    { num: '55-60', items: ['保水能力', '適應環境能力', '抵抗疲勞能力', '長期維持能力', '代謝彈性能力', '自我修復能力'] }
+                ]
+            },
+            ch14: {
+                titleCn: '第十四章｜遠古代謝健康 × 70大生物標誌',
+                titleEn: 'Chapter 14 | Ancestral Metabolism Health × 70 Biomarkers',
+                introCn: '真正的健康，不是感覺健康，而是生物標誌持續改善',
+                introEn: 'True health is not feeling well, but continuous biomarker improvement',
+                categories: [
+                    { title: '血糖代謝 | Glucose Metabolism', items: '空腹血糖 FPG | Fasting Blood Glucose, 糖化血色素 HbA1c, 空腹胰島素, 胰島素阻抗 HOMA-IR, C-Peptide' },
+                    { title: '血脂代謝 | Lipid Metabolism', items: '三酸甘油脂 TG, HDL, LDL, Non-HDL, TG/HDL比值' },
+                    { title: '發炎指數 | Inflammation', items: '高敏感C反應蛋白 hs-CRP, 紅血球沉降速率 ESR, 鐵蛋白 Ferritin, 白血球 WBC, 中性粒細胞淋巴球比 NLR' },
+                    { title: '免疫標誌 | Immune', items: '淋巴球 ALC, CD4細胞, CD8細胞, NK細胞, CD4/CD8比值' },
+                    { title: '肝臟功能 | Liver Function', items: '麗轉氨酶 AST, 丙轉氨酶 ALT, 伽瑪麩胺酸轉移酶 GGT, 鹼性磷酸酶 ALP, 白蛋白 Albumin' },
+                    { title: '腎臟功能 | Kidney Function', items: '肌酸酐 Creatinine, 推算腎絲球過濾率 eGFR, 血尿素氮 BUN, 尿酸 Uric Acid, 尿蛋白' },
+                    { title: '營養標誌 | Nutrition', items: '維生素D, 維生素B12, 葉酸 Folate, 鋅 Zinc, 鎂 Magnesium' },
+                    { title: '氧化壓力 | Oxidative Stress', items: '穀胱甘肽 GSH, 氧化穀胱甘肽 GSSG, 氧化低密度脂蛋白 OxLDL, 同型半胱胺酸 Homocysteine, 輔酶Q10 CoQ10' },
+                    { title: '荷爾蒙 | Hormones', items: '皮質醇 Cortisol, DHEA-S, 睪酮 Testosterone, 雌二醇 Estradiol, 促甲狀腺激素 TSH, 遊離T3, 遊離T4, 類胰島素生長因子-1 IGF-1' },
+                    { title: '心血管 | Cardiovascular', items: '血壓 Blood Pressure, 靜息心率 Resting Heart Rate, 心率變異性 HRV' }
+                ]
+            },
+            ch15: {
+                titleCn: '第十五章｜遠古代謝健康 × 80個生命控制節點',
+                titleEn: 'Chapter 15 | Ancestral Metabolism Health × 80 Control Nodes',
+                introCn: '真正的疾病，不是器官壞掉，而是控制節點開始失靈',
+                introEn: 'Disease is not organs failing, but control nodes malfunctioning',
+                sections: [
+                    { title: '能量控制 (1-10) | Energy Control', nodes: '粒線體ATP、NAD+、CoQ10、GLUT4、胰島素受體、AMPK、mTOR、SIRT1、PGC-1α、FOXO' },
+                    { title: '抗氧化控制 (11-20) | Antioxidant Control', nodes: 'Nrf2、NF-κB、GSH、GPx、SOD、Catalase、腸道菌相、丁酸、腸道屏障、消化酵素' },
+                    { title: '營養代謝控制 (21-30) | Nutrient Control', nodes: '胃酸、膽汁、肝臟解毒、Omega-3、細胞膜流動性、鋅、鎂、維生素D、β-葡聚醣、人參皂苷' },
+                    { title: '系統控制 (31-80) | System Control (50+ nodes)', nodes: '免疫、發炎、循環、神經、睡眠、荷爾蒙、肝臟、腎臟、肺部、腸道、大腦、脾臟、心臟、骨骼、肌肉、皮膚與更多...' }
+                ]
+            }
+        };
+
+        function renderChapter(chapterId) {
+            const data = chapterData[chapterId];
+            if (!data) return;
+
+            let html = `
+                <div class="section-title">${data.titleCn}</div>
+                <div class="section-title-en">
+                    ${data.titleEn}
+                    <button class="tts-btn" onclick="speakText('${data.titleEn.replace(/'/g, "\\'")}', event)">🔊</button>
+                </div>
+                ${data.introCn ? `
+                    <p class="section-intro">${data.introCn}</p>
+                    <div class="section-intro-en">
+                        ${data.introEn}
+                        <button class="tts-btn" onclick="speakText('${data.introEn.replace(/'/g, "\\'")}', event)">🔊</button>
+                    </div>
+                ` : ''}
+                <div class="legend">
+                    <div class="legend-title">📌 本章內容 / Chapter Content</div>
+                    <p>點擊卡片展開詳細內容 / Click to expand details</p>
+                </div>
+            `;
+
+            if (chapterId === 'ch2' && data.products) {
+                html += '<div class="grid-1col">';
+                data.products.forEach(prod => {
+                    html += `
+                        <div class="card" onclick="toggleCard(this)">
+                            <div class="card-header">
+                                <div class="card-titles">
+                                    <div class="card-title-cn">${prod.num} ${prod.name}</div>
+                                    <div class="card-title-en">${prod.en} <button class="tts-btn" onclick="speakText('${prod.en.replace(/'/g, "\\'")}', event)">🔊</button></div>
+                                </div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="bilingual-section">
+                                    <div class="label">價格 | Price</div>
+                                    <div class="text-cn">${prod.price}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (data.systems) {
+                html += '<div class="grid-2col">';
+                data.systems.forEach((sys, idx) => {
+                    const enKey = Object.keys(sys).find(k => k.includes('En') || k.includes('en'));
+                    html += `
+                        <div class="card" onclick="toggleCard(this)">
+                            <div class="card-header">
+                                <div class="card-titles">
+                                    <div class="card-title-cn">${sys.num ? sys.num + '. ' : ''}${sys.cn}</div>
+                                    <div class="card-title-en">${sys.en} <button class="tts-btn" onclick="speakText('${sys.en.replace(/'/g, "\\'")}', event)">🔊</button></div>
+                                </div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="card-content">
+                                ${Object.entries(sys).filter(([k, v]) => !k.includes('cn') && !k.includes('en') && k !== 'num' && typeof v === 'string').map(([k, v]) => `
+                                    <div class="bilingual-section">
+                                        <div class="label">${k}</div>
+                                        <div class="text-cn">${v}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (data.abilities) {
+                html += '<div class="grid-2col">';
+                data.abilities.forEach(ab => {
+                    html += `
+                        <div class="card" onclick="toggleCard(this)">
+                            <div class="card-header">
+                                <div class="card-titles">
+                                    <div class="card-title-cn">${ab.num} | ${ab.items.join(', ').substring(0, 30)}...</div>
+                                </div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="system-comparison">
+                                    ${ab.items.map(item => `<div>• ${item}</div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (data.categories) {
+                html += '<div class="grid-1col">';
+                data.categories.forEach(cat => {
+                    html += `
+                        <div class="card" onclick="toggleCard(this)">
+                            <div class="card-header">
+                                <div class="card-titles">
+                                    <div class="card-title-cn">${cat.title.split('|')[0].trim()}</div>
+                                    <div class="card-title-en">${cat.title.split('|')[1].trim()} <button class="tts-btn" onclick="speakText('${cat.title.split('|')[1].trim().replace(/'/g, "\\'")}', event)">🔊</button></div>
+                                </div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="system-comparison">
+                                    ${cat.items}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } else if (data.sections) {
+                html += '<div class="grid-1col">';
+                data.sections.forEach(sec => {
+                    html += `
+                        <div class="card" onclick="toggleCard(this)">
+                            <div class="card-header">
+                                <div class="card-titles">
+                                    <div class="card-title-cn">${sec.title}</div>
+                                </div>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="system-comparison">
+                                    ${sec.nodes}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            document.getElementById('mainContent').innerHTML = html;
+        }
+
+        function toggleCard(el) { el.classList.toggle('expanded'); }
+        function speakText(text, e) {
+            e.stopPropagation();
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = 0.9;
+                const btn = e.target;
+                btn.textContent = '⏳';
+                btn.disabled = true;
+                u.onend = () => { btn.textContent = '🔊'; btn.disabled = false; };
+                u.onerror = () => { btn.textContent = '🔊'; btn.disabled = false; };
+                speechSynthesis.speak(u);
+            }
+        }
+
+        document.querySelectorAll('.chapter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderChapter(e.target.dataset.chapter);
+            });
+        });
+
+        renderChapter('ch1');
+    </script>
+</body>
+</html>
