@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基督病友金句 - Christian Recovery Quotes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #0D1B3E;
+            line-height: 1.8;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0D1B3E 0%, #006B7D 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #006B7D;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #006B7D;
+            background: white;
+            color: #006B7D;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #006B7D;
+            color: white;
+        }
+        
+        .quotes-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        
+        .quote-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #B8860B;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quote-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .quote-card.expanded {
+            background: #f8f9fa;
+        }
+        
+        .quote-number {
+            font-size: 12px;
+            color: #B8860B;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .quote-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .quote-chinese {
+            font-size: 16px;
+            color: #0D1B3E;
+            font-weight: 500;
+            line-height: 1.8;
+        }
+        
+        .quote-english {
+            font-size: 14px;
+            color: #006B7D;
+            line-height: 1.8;
+            font-style: italic;
+        }
+        
+        .quote-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            flex-wrap: wrap;
+        }
+        
+        .quote-card.expanded .quote-actions {
+            opacity: 1;
+            max-height: 50px;
+        }
+        
+        .tts-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #006B7D;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Microsoft JhengHei', sans-serif;
+            transition: background 0.3s;
+        }
+        
+        .tts-btn:hover {
+            background: #005a6d;
+        }
+        
+        .tts-btn.playing {
+            background: #B8860B;
+        }
+        
+        .stats {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .expand-icon {
+            display: inline-block;
+            margin-left: 8px;
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .quote-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 600px) {
+            .quote-content {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            header h1 {
+                font-size: 22px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>基督病友金句</h1>
+        <p>Christian Recovery & Hope - 500 Inspirational Quotes for Healing</p>
+    </header>
+    
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜尋金句 / Search quotes..." />
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-range="all">全部 (All)</button>
+            <button class="filter-btn" data-range="1-100">1-100</button>
+            <button class="filter-btn" data-range="101-200">101-200</button>
+            <button class="filter-btn" data-range="201-300">201-300</button>
+            <button class="filter-btn" data-range="301-400">301-400</button>
+            <button class="filter-btn" data-range="401-500">401-500</button>
+        </div>
+    </div>
+    
+    <div class="quotes-container" id="quotesContainer"></div>
+    <div class="stats" id="stats"></div>
+    
+    <script>
+        // 所有500句金句數據 (Chinese | English)
+        const quotesData = [
+            { num: "001", zh: "今天還醒著，就是新的希望。", en: "Waking up today is a new hope." },
+            { num: "002", zh: "身體正在恢復，心也可以慢慢恢復。", en: "Your body is recovering; your heart can heal slowly." },
+            { num: "003", zh: "生病，不代表失去價值。", en: "Illness does not diminish your value." },
+            { num: "004", zh: "你不是疾病，你是一個值得被珍惜的人。", en: "You are not your disease; you are worthy of care." },
+            { num: "005", zh: "今天比昨天多一點力量，就是進步。", en: "One more bit of strength today is progress." },
+            { num: "006", zh: "不需要急著好起來，只要不要放棄。", en: "No need to rush healing; just don't give up." },
+            { num: "007", zh: "每一天，都是修復的一天。", en: "Every day is a day of restoration." },
+            { num: "008", zh: "身體需要休息，心也需要休息。", en: "Your body needs rest; so does your heart." },
+            { num: "009", zh: "希望，不需要很大，只要今天還在。", en: "Hope doesn't need to be grand; just alive today." },
+            { num: "010", zh: "不要一個人承擔所有重量。", en: "You don't have to carry the weight alone." },
+            { num: "011", zh: "真正的勇敢，是願意接受幫助。", en: "True courage is accepting help." },
+            { num: "012", zh: "今天能呼吸，就是一份禮物。", en: "Every breath today is a gift." },
+            { num: "013", zh: "生命，比疾病更強大。", en: "Life is stronger than illness." },
+            { num: "014", zh: "有些恢復，需要耐心。", en: "Some recovery requires patience." },
+            { num: "015", zh: "不要因為今天辛苦，就放棄明天。", en: "Don't give up tomorrow because today is hard." },
+            { num: "016", zh: "每一次休息，都是為了更好的前進。", en: "Every rest is for better progress ahead." },
+            { num: "017", zh: "願今天比昨天多一點平安。", en: "May today bring more peace than yesterday." },
+            { num: "018", zh: "痛苦會改變你，但不一定定義你。", en: "Pain changes you but doesn't have to define you." },
+            { num: "019", zh: "今天照顧好自己，就是重要的事。", en: "Taking care of yourself today is what matters." },
+            { num: "020", zh: "你的存在，本身就是祝福。", en: "Your existence itself is a blessing." },
+            { num: "021", zh: "不要因為生病，就忘記微笑。", en: "Don't forget to smile because of illness." },
+            { num: "022", zh: "願你一直保有盼望。", en: "May you always hold onto hope." },
+            { num: "023", zh: "每一天，都值得期待。", en: "Every day is worth looking forward to." },
+            { num: "024", zh: "今天能吃一口飯，就是進步。", en: "Eating a bite of food today is progress." },
+            { num: "025", zh: "今天能睡得好一點，就是恩典。", en: "Sleeping better today is grace." },
+            { num: "026", zh: "真正的力量，有時只是再堅持一天。", en: "True strength is sometimes just one more day." },
+            { num: "027", zh: "不要害怕慢慢恢復。", en: "Don't fear slow recovery." },
+            { num: "028", zh: "希望，常常從最小的改變開始。", en: "Hope often begins with the smallest change." },
+            { num: "029", zh: "不要放棄相信身體的修復能力。", en: "Don't stop believing in your body's healing power." },
+            { num: "030", zh: "今天也要對自己溫柔一點。", en: "Be a little gentler with yourself today." },
+            { num: "031", zh: "願你的心，比疾病更堅強。", en: "May your heart be stronger than illness." },
+            { num: "032", zh: "每一個明天，都可能更好。", en: "Every tomorrow has the potential to be better." },
+            { num: "033", zh: "不要讓害怕偷走今天。", en: "Don't let fear steal today from you." },
+            { num: "034", zh: "好好休息，也是一種勇敢。", en: "Good rest is also a form of courage." },
+            { num: "035", zh: "生命依然有很多美好的事。", en: "Life still has so much beauty." },
+            { num: "036", zh: "今天，先照顧好自己。", en: "Today, take care of yourself first." },
+            { num: "037", zh: "有愛陪伴，就比較不孤單。", en: "With love beside you, you're never alone." },
+            { num: "038", zh: "每一步恢復，都值得慶祝。", en: "Every step of recovery deserves celebration." },
+            { num: "039", zh: "身體會累，心不要絕望。", en: "Your body may tire, but your heart shouldn't despair." },
+            { num: "040", zh: "你沒有被放棄。", en: "You have not been abandoned." },
+            { num: "041", zh: "願你一直相信，自己還有未來。", en: "May you always believe you have a future." },
+            { num: "042", zh: "生病，只是人生的一段路。", en: "Illness is just one chapter of your life." },
+            { num: "043", zh: "真正重要的是，不停止向前。", en: "What matters is never stopping moving forward." },
+            { num: "044", zh: "今天活著，就是希望。", en: "Living today is hope itself." },
+            { num: "045", zh: "每一口呼吸，都值得感恩。", en: "Every breath deserves gratitude." },
+            { num: "046", zh: "不要急，恢復需要時間。", en: "Don't rush; recovery takes time." },
+            { num: "047", zh: "身體正在努力，你也正在努力。", en: "Your body is trying; so are you." },
+            { num: "048", zh: "願今天有更多笑容。", en: "May today bring more smiles." },
+            { num: "049", zh: "每一份關心，都是真實的力量。", en: "Every care is real strength." },
+            { num: "050", zh: "你的故事，還沒有結束。", en: "Your story hasn't ended yet." },
+            { num: "051", zh: "痛苦不會永遠停留。", en: "Pain will not stay forever." },
+            { num: "052", zh: "今天，比昨天更有希望。", en: "Today holds more hope than yesterday." },
+            { num: "053", zh: "願你的心充滿平安。", en: "May your heart be filled with peace." },
+            { num: "054", zh: "不要獨自面對風雨。", en: "You don't have to face the storm alone." },
+            { num: "055", zh: "每一天都是新的開始。", en: "Every day is a new beginning." },
+            { num: "056", zh: "今天，也可以相信美好。", en: "Today, you can believe in beauty." },
+            { num: "057", zh: "願你一直被愛包圍。", en: "May you always be surrounded by love." },
+            { num: "058", zh: "真正的醫治，也包含心靈的恢復。", en: "True healing includes spiritual recovery." },
+            { num: "059", zh: "生命，總有新的可能。", en: "Life always has new possibilities." },
+            { num: "060", zh: "不要失去盼望。", en: "Don't lose hope." },
+            { num: "061", zh: "每一次呼吸，都代表生命仍在前進。", en: "Every breath means life moves forward." },
+            { num: "062", zh: "今天先完成今天。", en: "Just get through today first." },
+            { num: "063", zh: "不必擔心所有明天。", en: "You don't need to worry about all tomorrows." },
+            { num: "064", zh: "願你的眼睛，看見希望。", en: "May your eyes see hope." },
+            { num: "065", zh: "願你的心，不被恐懼困住。", en: "May your heart not be trapped by fear." },
+            { num: "066", zh: "每一天都比放棄更有價值。", en: "Every day is more valuable than giving up." },
+            { num: "067", zh: "有人一直惦記著你。", en: "Someone is always thinking of you." },
+            { num: "068", zh: "今天，你已經很勇敢。", en: "You are already brave today." },
+            { num: "069", zh: "眼淚，不代表失敗。", en: "Tears don't mean failure." },
+            { num: "070", zh: "堅持，不一定很大聲。", en: "Persistence doesn't have to be loud." },
+            { num: "071", zh: "今天能微笑，就是勝利。", en: "Smiling today is victory." },
+            { num: "072", zh: "願你的生命再次綻放。", en: "May your life blossom again." },
+            { num: "073", zh: "希望，總比絕望多一步。", en: "Hope is always one step ahead of despair." },
+            { num: "074", zh: "每一天都值得珍惜。", en: "Every day is worth treasuring." },
+            { num: "075", zh: "真正的平安，是心仍有盼望。", en: "True peace is hope still in the heart." },
+            { num: "076", zh: "不要忘記，你並不孤單。", en: "Remember, you are not alone." },
+            { num: "077", zh: "今天也是值得感謝的一天。", en: "Today is also a day to be grateful." },
+            { num: "078", zh: "願你的身體一天一天恢復。", en: "May your body recover day by day." },
+            { num: "079", zh: "願你的心一天一天安穩。", en: "May your heart be at peace each day." },
+            { num: "080", zh: "每一次醒來，都有新的可能。", en: "Every awakening brings new possibility." },
+            { num: "081", zh: "不要停止相信奇蹟。", en: "Don't stop believing in miracles." },
+            { num: "082", zh: "今天比昨天更靠近康復。", en: "Today brings you closer to recovery." },
+            { num: "083", zh: "願你的眼淚，慢慢變成笑容。", en: "May your tears slowly turn to smiles." },
+            { num: "084", zh: "愛，能陪伴人走過艱難。", en: "Love can carry you through hardship." },
+            { num: "085", zh: "願今天有新的力量。", en: "May today bring new strength." },
+            { num: "086", zh: "生命，比想像中更有韌性。", en: "Life has more resilience than you think." },
+            { num: "087", zh: "今天先照亮今天。", en: "Just brighten today first." },
+            { num: "088", zh: "願你的心一直充滿希望。", en: "May your heart always hold hope." },
+            { num: "089", zh: "不要害怕未來。", en: "Don't fear the future." },
+            { num: "090", zh: "一切都可以一步一步來。", en: "Everything can be taken one step at a time." },
+            { num: "091", zh: "願你永遠記得自己的價值。", en: "Never forget your own value." },
+            { num: "092", zh: "有些最美的花，開得比較晚。", en: "The most beautiful flowers bloom later." },
+            { num: "093", zh: "願平安陪伴你的每一天。", en: "May peace accompany every day." },
+            { num: "094", zh: "希望，是每天重新選擇相信。", en: "Hope is choosing to believe anew each day." },
+            { num: "095", zh: "生命永遠比疾病更值得相信。", en: "Life is always more worthy of belief than illness." },
+            { num: "096", zh: "今天，好好活著就很好。", en: "Today, simply living well is enough." },
+            { num: "097", zh: "願你的勇敢，超過你的害怕。", en: "May your courage exceed your fear." },
+            { num: "098", zh: "願你的生命重新充滿力量。", en: "May your life be filled with strength again." },
+            { num: "099", zh: "願每一天，都帶來新的希望。", en: "May each day bring new hope." },
+            { num: "100", zh: "最黑的夜，也無法阻止天亮。", en: "The darkest night cannot stop the dawn." },
+            { num: "101", zh: "今天還能感受陽光，就是值得珍惜的一天。", en: "A day where you feel sunshine is precious." },
+            { num: "102", zh: "不要低估身體每天努力修復的能力。", en: "Don't underestimate your body's daily healing power." },
+            { num: "103", zh: "希望，不一定轟轟烈烈，也可以安安靜靜。", en: "Hope doesn't have to be dramatic; it can be quiet." },
+            { num: "104", zh: "每一次醒來，都是新的開始。", en: "Every awakening is a fresh start." },
+            { num: "105", zh: "不需要一次走很遠，只要願意再走一步。", en: "You don't need far distances; just one more step." },
+            { num: "106", zh: "今天的你，已經比昨天更勇敢。", en: "You are already braver today than yesterday." },
+            { num: "107", zh: "生病不是失敗，而是一段需要被溫柔對待的旅程。", en: "Illness isn't failure; it's a journey needing gentleness." },
+            { num: "108", zh: "願你的心，比困難更有力量。", en: "May your heart be stronger than difficulty." },
+            { num: "109", zh: "今天先好好吃飯，好好休息。", en: "Today, just eat well and rest well." },
+            { num: "110", zh: "身體需要時間，請給自己時間。", en: "Your body needs time; give yourself that time." },
+            { num: "111", zh: "不要因為今天不好，就否定未來。", en: "Don't deny the future because today is hard." },
+            { num: "112", zh: "再慢的恢復，也是在恢復。", en: "Even slow recovery is still recovery." },
+            { num: "113", zh: "每一天都有值得感謝的小事。", en: "Every day has small things to be grateful for." },
+            { num: "114", zh: "你的笑容，依然有力量。", en: "Your smile still has power." },
+            { num: "115", zh: "願你的心一直保有希望。", en: "May hope always remain in your heart." },
+            { num: "116", zh: "沒有一場黑夜，能永遠遮住黎明。", en: "No night can forever hide the dawn." },
+            { num: "117", zh: "今天先照顧自己，不必勉強堅強。", en: "Care for yourself today; don't force strength." },
+            { num: "118", zh: "每一次呼吸，都代表生命仍然前進。", en: "Every breath means life keeps moving forward." },
+            { num: "119", zh: "生命的價值，不會因疾病減少。", en: "Your life's value doesn't diminish with illness." },
+            { num: "120", zh: "今天還有愛，就還有希望。", en: "Where there's love today, there's hope." },
+            { num: "121", zh: "不要急著戰勝疾病，先學會善待自己。", en: "Don't rush to defeat illness; learn kindness to yourself first." },
+            { num: "122", zh: "真正的勇敢，是願意相信明天。", en: "True courage is believing in tomorrow." },
+            { num: "123", zh: "願你一天一天找回力量。", en: "May you find strength day by day." },
+            { num: "124", zh: "今天比昨天多一點平安，就很好。", en: "A little more peace today is wonderful." },
+            { num: "125", zh: "不要獨自承受一切。", en: "You don't have to bear everything alone." },
+            { num: "126", zh: "願你的心，比疼痛更安穩。", en: "May your heart be calmer than the pain." },
+            { num: "127", zh: "每一個清晨，都帶著新的可能。", en: "Every morning brings new possibility." },
+            { num: "128", zh: "不要讓恐懼，比希望更大。", en: "Don't let fear be bigger than hope." },
+            { num: "129", zh: "有人關心你，比你想像得更多。", en: "More people care than you realize." },
+            { num: "130", zh: "每一天都是生命送來的新機會。", en: "Every day is a new opportunity from life." },
+            { num: "131", zh: "願你一直相信，自己會越來越好。", en: "Keep believing you'll get better and better." },
+            { num: "132", zh: "每一次微笑，都在療癒自己。", en: "Every smile heals you." },
+            { num: "133", zh: "不要害怕流淚，那也是釋放。", en: "Don't fear tears; they're also release." },
+            { num: "134", zh: "真正的力量，有時只是今天沒有放棄。", en: "Sometimes real strength is just not giving up today." },
+            { num: "135", zh: "願你的心充滿安慰。", en: "May your heart be filled with comfort." },
+            { num: "136", zh: "今天也值得期待。", en: "Today is also worth anticipating." },
+            { num: "137", zh: "身體正在努力，你也正在努力。", en: "Your body is trying; you are too." },
+            { num: "138", zh: "不要忘記，你比疾病更大。", en: "Remember, you are bigger than illness." },
+            { num: "139", zh: "今天先完成今天。", en: "Get through today first." },
+            { num: "140", zh: "每一個小進步，都值得慶祝。", en: "Every small progress deserves celebration." },
+            { num: "141", zh: "願你的心重新充滿勇氣。", en: "May courage fill your heart again." },
+            { num: "142", zh: "不要因為疲倦，就放棄希望。", en: "Don't abandon hope because of tiredness." },
+            { num: "143", zh: "今天的堅持，就是明天的禮物。", en: "Today's persistence is tomorrow's gift." },
+            { num: "144", zh: "生命依然有許多值得期待的人和事。", en: "Life still has many people and things to look forward to." },
+            { num: "145", zh: "願你的心越來越平靜。", en: "May your heart become more peaceful." },
+            { num: "146", zh: "希望常常從一句鼓勵開始。", en: "Hope often begins with one encouraging word." },
+            { num: "147", zh: "不要害怕慢慢變好。", en: "Don't fear gradual improvement." },
+            { num: "148", zh: "今天的休息，也是前進的一部分。", en: "Today's rest is part of moving forward." },
+            { num: "149", zh: "每一天都是新的恩典。", en: "Every day is new grace." },
+            { num: "150", zh: "願你的生命重新充滿色彩。", en: "May your life be colorful again." },
+            { num: "151", zh: "今天也請記得微笑。", en: "Remember to smile today too." },
+            { num: "152", zh: "有人陪伴，路就不那麼難走。", en: "With company, the path isn't so hard." },
+            { num: "153", zh: "願你的心比昨天更輕鬆。", en: "May your heart be lighter than yesterday." },
+            { num: "154", zh: "不要放棄任何一個可能。", en: "Don't give up any possibility." },
+            { num: "155", zh: "每一份耐心，都會開花結果。", en: "Every bit of patience will bear fruit." },
+            { num: "156", zh: "今天仍然值得努力活著。", en: "Today is still worth living for." },
+            { num: "157", zh: "願你的每一步，都更靠近康復。", en: "May each step bring you closer to recovery." },
+            { num: "158", zh: "不要讓昨天的眼淚，遮住今天的希望。", en: "Don't let yesterday's tears hide today's hope." },
+            { num: "159", zh: "每一天都可能帶來好消息。", en: "Every day might bring good news." },
+            { num: "160", zh: "今天請相信自己。", en: "Believe in yourself today." },
+            { num: "161", zh: "願你慢慢找回生活的喜樂。", en: "May you slowly rediscover life's joy." },
+            { num: "162", zh: "痛苦會過去，希望會留下。", en: "Pain will pass; hope will remain." },
+            { num: "163", zh: "不要停止期待明天。", en: "Keep anticipating tomorrow." },
+            { num: "164", zh: "每一天都是重新開始。", en: "Every day is a fresh start." },
+            { num: "165", zh: "願你的生命充滿溫暖。", en: "May your life be filled with warmth." },
+            { num: "166", zh: "今天依然有值得感恩的人。", en: "Today there are still people to be grateful for." },
+            { num: "167", zh: "不要害怕未知，未來仍有希望。", en: "Don't fear the unknown; the future holds hope." },
+            { num: "168", zh: "願你一直被愛圍繞。", en: "May you always be surrounded by love." },
+            { num: "169", zh: "今天也有新的力量。", en: "Today brings new strength." },
+            { num: "170", zh: "每一次站起來，都值得驕傲。", en: "Every time you stand up is worth pride." },
+            { num: "171", zh: "不要失去對生命的熱愛。", en: "Don't lose your love for life." },
+            { num: "172", zh: "願你的心一天比一天更自由。", en: "May your heart be freer each day." },
+            { num: "173", zh: "今天也是值得珍惜的一天。", en: "Today is also a day to treasure." },
+            { num: "174", zh: "每一次恢復，都從一小步開始。", en: "Every recovery begins with one small step." },
+            { num: "175", zh: "願你一直相信生命的韌性。", en: "Always believe in life's resilience." },
+            { num: "176", zh: "不要讓絕望住進心裡。", en: "Don't let despair live in your heart." },
+            { num: "177", zh: "今天請對自己說一句加油。", en: "Encourage yourself today." },
+            { num: "178", zh: "每一天都有新的恩典等著你。", en: "New grace awaits you every day." },
+            { num: "179", zh: "願你的心重新充滿光。", en: "May light fill your heart again." },
+            { num: "180", zh: "不要害怕等待，美好的事值得耐心。", en: "Don't fear waiting; good things deserve patience." },
+            { num: "181", zh: "今天先相信，再前進。", en: "Believe first, then move forward." },
+            { num: "182", zh: "願你的心充滿平安與盼望。", en: "May your heart hold peace and hope." },
+            { num: "183", zh: "每一次呼吸，都是生命最美的證明。", en: "Every breath proves life's beauty." },
+            { num: "184", zh: "今天也是一份珍貴的禮物。", en: "Today is also a precious gift." },
+            { num: "185", zh: "願你一直擁有向前的力量。", en: "Always have the strength to move forward." },
+            { num: "186", zh: "不要停止相信愛。", en: "Never stop believing in love." },
+            { num: "187", zh: "今天依然有人為你祝福。", en: "Someone is still blessing you today." },
+            { num: "188", zh: "願你的笑容一天比一天更多。", en: "May your smiles increase each day." },
+            { num: "189", zh: "每一次努力，都沒有白費。", en: "No effort is ever wasted." },
+            { num: "190", zh: "今天也請相信美好。", en: "Believe in beauty today too." },
+            { num: "191", zh: "願你的心越來越有力量。", en: "May your heart grow stronger." },
+            { num: "192", zh: "不要害怕重新開始。", en: "Don't fear starting over." },
+            { num: "193", zh: "每一天都是生命新的篇章。", en: "Every day is a new chapter of life." },
+            { num: "194", zh: "願你再次感受到生活的美好。", en: "Feel life's beauty again." },
+            { num: "195", zh: "今天比昨天更接近希望。", en: "Closer to hope today than yesterday." },
+            { num: "196", zh: "不要忘記，你一直都很珍貴。", en: "Remember, you've always been precious." },
+            { num: "197", zh: "願你的未來充滿光明。", en: "May your future be bright." },
+            { num: "198", zh: "今天先活好今天。", en: "Live well today." },
+            { num: "199", zh: "希望一直都在，只要不放棄。", en: "Hope is always there as long as you don't give up." },
+            { num: "200", zh: "願平安、力量與盼望陪伴你的每一天。", en: "May peace, strength, and hope accompany every day." },
+            { num: "201", zh: "不要因為今天疼痛，就忘記生命仍在成長。", en: "Today's pain doesn't mean life stops growing." },
+            { num: "202", zh: "每一天醒來，都是生命送給你的新機會。", en: "Every awakening is a gift of new opportunity." },
+            { num: "203", zh: "今天先照顧自己，就是最重要的事。", en: "Caring for yourself today is most important." },
+            { num: "204", zh: "願你的心，永遠比困難更堅強。", en: "May your heart always be stronger than difficulty." },
+            { num: "205", zh: "身體會疲累，希望不要疲累。", en: "Your body may tire, but hope shouldn't." },
+            { num: "206", zh: "有些恢復，看不見，卻正在發生。", en: "Some recovery is invisible but happening." },
+            { num: "207", zh: "不要放棄那些還沒有發生的美好。", en: "Don't give up on beauty yet to come." },
+            { num: "208", zh: "願今天比昨天多一點力量。", en: "May today bring a bit more strength." },
+            { num: "209", zh: "每一次堅持，都讓生命更有韌性。", en: "Every persistence makes life more resilient." },
+            { num: "210", zh: "今天先相信，希望會慢慢長大。", en: "Believe first; hope will slowly grow." },
+            { num: "211", zh: "不需要一直堅強，也可以很勇敢。", en: "You don't need constant strength to be brave." },
+            { num: "212", zh: "願你的心找到真正的安穩。", en: "May your heart find true peace." },
+            { num: "213", zh: "每一道傷痕，都見證你曾努力走過。", en: "Every scar witnesses your effort to persevere." },
+            { num: "214", zh: "今天依然值得期待。", en: "Today is still worth looking forward to." },
+            { num: "215", zh: "不要忘記，生命一直在向前。", en: "Remember, life keeps moving forward." },
+            { num: "216", zh: "每一天都是新的開始。", en: "Every day is a new beginning." },
+            { num: "217", zh: "願你的心重新充滿勇氣。", en: "May courage fill your heart again." },
+            { num: "218", zh: "不要因為等待，而失去盼望。", en: "Waiting shouldn't cost you hope." },
+            { num: "219", zh: "今天請對自己溫柔一點。", en: "Be gentle with yourself today." },
+            { num: "220", zh: "你的故事，還有很多美好的篇章。", en: "Your story has many beautiful chapters ahead." },
+            { num: "221", zh: "希望不是感覺，而是一種選擇。", en: "Hope is not a feeling; it's a choice." },
+            { num: "222", zh: "願你的每一天，都比昨天更明亮。", en: "May each day be brighter than yesterday." },
+            { num: "223", zh: "痛苦不是全部的人生。", en: "Pain is not all of life." },
+            { num: "224", zh: "今天，也有值得微笑的理由。", en: "Today has reasons to smile." },
+            { num: "225", zh: "願你一直保有相信未來的能力。", en: "Always keep the ability to believe in the future." },
+            { num: "226", zh: "每一次休息，都是為了再次出發。", en: "Every rest prepares for another start." },
+            { num: "227", zh: "今天先完成今天。", en: "Get through today first." },
+            { num: "228", zh: "不要急著趕路，慢慢走也很好。", en: "Don't rush; slow walks are fine." },
+            { num: "229", zh: "願你的生命充滿新的可能。", en: "May your life overflow with new possibilities." },
+            { num: "230", zh: "希望常常在最安靜的地方生長。", en: "Hope often grows in the quietest places." },
+            { num: "231", zh: "不要讓恐懼大過夢想。", en: "Don't let fear outweigh dreams." },
+            { num: "232", zh: "今天請相信自己的生命力。", en: "Believe in your vitality today." },
+            { num: "233", zh: "每一口呼吸，都代表新的機會。", en: "Every breath is a new opportunity." },
+            { num: "234", zh: "願你的心，不再被憂慮綑綁。", en: "May your heart be free from worry." },
+            { num: "235", zh: "不要放棄每一個明天。", en: "Don't abandon any tomorrow." },
+            { num: "236", zh: "今天也是值得感恩的一天。", en: "Today is also worth gratitude." },
+            { num: "237", zh: "願你慢慢找回健康，也找回笑容。", en: "Gradually find health and smiles again." },
+            { num: "238", zh: "每一次恢復，都值得慶祝。", en: "Every recovery step deserves celebration." },
+            { num: "239", zh: "不要害怕慢，只要不停下來。", en: "Don't fear slowness; just don't stop." },
+            { num: "240", zh: "今天比昨天更接近康復。", en: "Closer to recovery than yesterday." },
+            { num: "241", zh: "願你的心充滿光亮。", en: "May your heart shine with light." },
+            { num: "242", zh: "每一天都可以重新開始。", en: "Every day can be a fresh start." },
+            { num: "243", zh: "不要讓失望偷走今天。", en: "Don't let disappointment steal today." },
+            { num: "244", zh: "今天依然值得努力生活。", en: "Today is still worth living well." },
+            { num: "245", zh: "願你找到平靜，也找到力量。", en: "Find peace and strength." },
+            { num: "246", zh: "每一次堅持，都有意義。", en: "Every persistence has meaning." },
+            { num: "247", zh: "今天請相信，美好的事仍會發生。", en: "Believe good things will still happen." },
+            { num: "248", zh: "不要停止期待生命的驚喜。", en: "Keep expecting life's surprises." },
+            { num: "249", zh: "願你的心比昨天更輕盈。", en: "May your heart be lighter today." },
+            { num: "250", zh: "今天，好好活著就是勝利。", en: "Living well today is victory." },
+            { num: "251", zh: "有愛陪伴，路就不孤單。", en: "With love, the path is never lonely." },
+            { num: "252", zh: "每一天都是珍貴的禮物。", en: "Every day is a precious gift." },
+            { num: "253", zh: "願你的眼睛一直看見希望。", en: "May your eyes always see hope." },
+            { num: "254", zh: "不要因為生病，就忘記自己的夢想。", en: "Don't forget your dreams because of illness." },
+            { num: "255", zh: "今天依然可以選擇勇敢。", en: "You can still choose courage today." },
+            { num: "256", zh: "願你的生命一天一天恢復活力。", en: "May your life regain vitality daily." },
+            { num: "257", zh: "每一個小進步，都值得開心。", en: "Every small progress deserves joy." },
+            { num: "258", zh: "不要忘記，你一直都很重要。", en: "You've always mattered greatly." },
+            { num: "259", zh: "今天請相信，自己做得到。", en: "Believe you can do it today." },
+            { num: "260", zh: "願你的心比昨天更自由。", en: "May your heart be freer than yesterday." },
+            { num: "261", zh: "每一次醒來，都是新的恩典。", en: "Every awakening is new grace." },
+            { num: "262", zh: "不要讓擔心填滿今天。", en: "Don't let worry fill today." },
+            { num: "263", zh: "今天先活好今天。", en: "Live well today." },
+            { num: "264", zh: "願你重新感受到生活的美好。", en: "Feel life's beauty again." },
+            { num: "265", zh: "每一天都有新的希望等著你。", en: "New hope awaits you each day." },
+            { num: "266", zh: "不要放棄那些正在發芽的改變。", en: "Don't abandon budding changes." },
+            { num: "267", zh: "今天依然有人愛著你。", en: "Someone still loves you today." },
+            { num: "268", zh: "願你的心充滿溫暖。", en: "May your heart be warm." },
+            { num: "269", zh: "每一次笑容，都是力量。", en: "Every smile is strength." },
+            { num: "270", zh: "今天先照亮今天。", en: "Just brighten today." },
+            { num: "271", zh: "願你一直相信生命的韌性。", en: "Always believe in life's resilience." },
+            { num: "272", zh: "不要害怕未來還不知道。", en: "Don't fear the unknown future." },
+            { num: "273", zh: "今天也是充滿可能的一天。", en: "Today is full of possibility." },
+            { num: "274", zh: "願你的心一天比一天更安穩。", en: "May your heart be sturdier each day." },
+            { num: "275", zh: "每一次等待，都可能迎來驚喜。", en: "Every wait may bring a surprise." },
+            { num: "276", zh: "今天依然值得期待。", en: "Today is still worth anticipating." },
+            { num: "277", zh: "願你的生命充滿平安。", en: "May your life be full of peace." },
+            { num: "278", zh: "不要停止相信愛的力量。", en: "Don't stop believing in love's power." },
+            { num: "279", zh: "今天請為自己鼓掌。", en: "Applaud yourself today." },
+            { num: "280", zh: "願你的勇氣超過恐懼。", en: "May your courage exceed your fear." },
+            { num: "281", zh: "每一天都是新的旅程。", en: "Every day is a new journey." },
+            { num: "282", zh: "不要讓昨天定義今天。", en: "Don't let yesterday define today." },
+            { num: "283", zh: "今天先相信，再看見。", en: "Believe first, then see." },
+            { num: "284", zh: "願你的心越來越有盼望。", en: "May your heart fill with more hope." },
+            { num: "285", zh: "每一次努力，都在累積恢復。", en: "Every effort accumulates recovery." },
+            { num: "286", zh: "今天依然有新的開始。", en: "Today still brings a fresh start." },
+            { num: "287", zh: "願你的笑容再次綻放。", en: "May your smile bloom again." },
+            { num: "288", zh: "不要忘記，你不是一個人。", en: "You're not alone." },
+            { num: "289", zh: "今天，好好休息也是前進。", en: "Rest well today; it's also moving forward." },
+            { num: "290", zh: "願你的生命重新充滿色彩。", en: "May your life regain its colors." },
+            { num: "291", zh: "每一次感恩，都讓心更有力量。", en: "Gratitude strengthens the heart." },
+            { num: "292", zh: "今天請相信奇蹟仍有可能。", en: "Miracles are still possible." },
+            { num: "293", zh: "願你的每一天都多一點平安。", en: "May each day have a bit more peace." },
+            { num: "294", zh: "不要放棄任何值得期待的明天。", en: "Don't abandon any tomorrow worth anticipating." },
+            { num: "295", zh: "今天也可以成為最美好的一天。", en: "Today could be the most beautiful day." },
+            { num: "296", zh: "願你的心永遠充滿盼望。", en: "May your heart always hold hope." },
+            { num: "297", zh: "每一次選擇相信，都在滋養生命。", en: "Every choice to believe nourishes life." },
+            { num: "298", zh: "今天比昨天更靠近光明。", en: "Closer to light than yesterday." },
+            { num: "299", zh: "願你的生命充滿愛、平安與力量。", en: "May your life overflow with love, peace, and strength." },
+            { num: "300", zh: "無論今天如何，願你始終相信：生命永遠值得珍惜，希望永遠值得等待。", en: "Whatever today brings, believe: life is always precious, hope is always worth the wait." },
+            { num: "301", zh: "願今天的平安，大過今天的擔心。", en: "May today's peace exceed today's worry." },
+            { num: "302", zh: "不要因為身體疲累，就忘記心仍有力量。", en: "Don't forget heart strength despite physical fatigue." },
+            { num: "303", zh: "今天還能看見陽光，就是一份祝福。", en: "Seeing sunlight today is a blessing." },
+            { num: "304", zh: "每一次呼吸，都在提醒你生命仍充滿可能。", en: "Every breath reminds you life is full of possibility." },
+            { num: "305", zh: "願你的心，比風浪更安穩。", en: "May your heart be sturdier than storms." },
+            { num: "306", zh: "今天先照顧自己，其餘慢慢來。", en: "Care for yourself today; take other things slowly." },
+            { num: "307", zh: "不要讓恐懼，偷走今天的希望。", en: "Don't let fear steal today's hope." },
+            { num: "308", zh: "每一天，都是新的開始。", en: "Every day is a fresh start." },
+            { num: "309", zh: "願你的眼淚，成為重新站起來的力量。", en: "May your tears become strength to rise again." },
+            { num: "310", zh: "身體需要時間，生命也需要耐心。", en: "Bodies need time; life needs patience." },
+            { num: "311", zh: "今天比昨天多一點平安，就是恩典。", en: "A bit more peace today is grace." },
+            { num: "312", zh: "不要放棄正在努力恢復的自己。", en: "Don't give up on your recovering self." },
+            { num: "313", zh: "願你的心，一天比一天更明亮。", en: "May your heart brighten each day." },
+            { num: "314", zh: "今天仍然值得期待。", en: "Today is still worth anticipating." },
+            { num: "315", zh: "希望，總是比絕望多一步。", en: "Hope is always one step ahead of despair." },
+            { num: "316", zh: "願你永遠相信，生命比疾病更大。", en: "Always believe life is bigger than illness." },
+            { num: "317", zh: "每一天都有新的機會。", en: "Every day brings new opportunity." },
+            { num: "318", zh: "今天也可以選擇微笑。", en: "You can still choose to smile today." },
+            { num: "319", zh: "願你的心充滿安慰。", en: "May your heart be comforted." },
+            { num: "320", zh: "每一次休息，都是為了更好的恢復。", en: "Every rest leads to better recovery." },
+            { num: "321", zh: "不要急著到終點，好好走今天。", en: "Don't rush to the end; walk today well." },
+            { num: "322", zh: "願今天有新的力量陪伴你。", en: "May new strength accompany you today." },
+            { num: "323", zh: "每一個清晨，都代表新的可能。", en: "Every morning represents new possibility." },
+            { num: "324", zh: "今天依然可以相信美好。", en: "You can still believe in beauty today." },
+            { num: "325", zh: "願你的勇敢，比昨天更多一點。", en: "May you be a bit braver today." },
+            { num: "326", zh: "每一次堅持，都讓未來更靠近。", en: "Every persistence brings the future closer." },
+            { num: "327", zh: "今天請善待自己的身體。", en: "Be kind to your body today." },
+            { num: "328", zh: "願你的心找到真正的平靜。", en: "May your heart find true stillness." },
+            { num: "329", zh: "每一天都值得感恩。", en: "Every day deserves gratitude." },
+            { num: "330", zh: "今天依然有人為你祝福。", en: "Someone is still blessing you today." },
+            { num: "331", zh: "願你的生命再次充滿笑容。", en: "May smiles return to your life." },
+            { num: "332", zh: "不要因為疼痛，就忘記愛仍然存在。", en: "Pain doesn't mean love ceases." },
+            { num: "333", zh: "今天先相信，再前進。", en: "Believe first, then move forward." },
+            { num: "334", zh: "願你的心一直保有希望。", en: "Always hold hope in your heart." },
+            { num: "335", zh: "每一次努力，都沒有白費。", en: "No effort is ever wasted." },
+            { num: "336", zh: "今天也是珍貴的一天。", en: "Today is precious." },
+            { num: "337", zh: "願你的心重新充滿勇氣。", en: "May courage return to your heart." },
+            { num: "338", zh: "不要停止期待生命的美好。", en: "Keep expecting life's beauty." },
+            { num: "339", zh: "今天比昨天更接近健康。", en: "Closer to health than yesterday." },
+            { num: "340", zh: "願你的生命重新綻放。", en: "May your life bloom again." },
+            { num: "341", zh: "每一個小改變，都值得珍惜。", en: "Every small change is worth treasuring." },
+            { num: "342", zh: "今天依然有新的恩典。", en: "Today brings new grace." },
+            { num: "343", zh: "願你的心，不再被恐懼困住。", en: "May fear no longer trap your heart." },
+            { num: "344", zh: "不要低估自己的生命力。", en: "Don't underestimate your vitality." },
+            { num: "345", zh: "今天也請記得好好休息。", en: "Remember to rest well today." },
+            { num: "346", zh: "願你的每一天，都多一點平安。", en: "May each day have more peace." },
+            { num: "347", zh: "每一次等待，都可能迎來好消息。", en: "Waiting may bring good news." },
+            { num: "348", zh: "今天請相信，你會越來越好。", en: "You'll keep getting better." },
+            { num: "349", zh: "願你的心，比昨天更自由。", en: "May your heart be freer than yesterday." },
+            { num: "350", zh: "不要讓擔憂占滿今天。", en: "Don't let worry fill today." },
+            { num: "351", zh: "今天依然有值得感謝的人。", en: "People to be grateful for still exist today." },
+            { num: "352", zh: "願你的生命充滿新的希望。", en: "May your life brim with new hope." },
+            { num: "353", zh: "每一次呼吸，都是新的開始。", en: "Every breath is a new start." },
+            { num: "354", zh: "今天也值得被珍惜。", en: "Today deserves to be treasured." },
+            { num: "355", zh: "願你的眼睛，看見更多美好。", en: "May your eyes see more beauty." },
+            { num: "356", zh: "不要放棄每一個明天。", en: "Don't abandon any tomorrow." },
+            { num: "357", zh: "今天先完成今天。", en: "Get through today." },
+            { num: "358", zh: "願你的心，一直被愛包圍。", en: "May love always surround your heart." },
+            { num: "359", zh: "每一天都是重新出發的機會。", en: "Every day is a chance to start again." },
+            { num: "360", zh: "今天請相信自己的韌性。", en: "Trust your own resilience today." },
+            { num: "361", zh: "願你的心慢慢恢復安穩。", en: "May your heart gradually find peace." },
+            { num: "362", zh: "不要停止相信生命的奇蹟。", en: "Keep believing in life's miracles." },
+            { num: "363", zh: "今天依然有新的可能。", en: "Today holds new possibility." },
+            { num: "364", zh: "願你的笑容再次回到臉上。", en: "May your smile return." },
+            { num: "365", zh: "每一天都離希望更近一點。", en: "Each day brings hope closer." },
+            { num: "366", zh: "今天請把重擔放下一點。", en: "Set down some burden today." },
+            { num: "367", zh: "願你的心重新找到力量。", en: "May your heart find strength again." },
+            { num: "368", zh: "不要忘記，你一直都很重要。", en: "You've always mattered." },
+            { num: "369", zh: "今天也請對自己有耐心。", en: "Be patient with yourself today." },
+            { num: "370", zh: "願你的生命重新充滿活力。", en: "May your life regain vitality." },
+            { num: "371", zh: "每一次堅持，都值得被記住。", en: "Every persistence deserves remembrance." },
+            { num: "372", zh: "今天依然可以擁抱希望。", en: "You can still embrace hope today." },
+            { num: "373", zh: "願你的心一天比一天更輕鬆。", en: "May your heart ease more each day." },
+            { num: "374", zh: "不要害怕慢慢恢復。", en: "Don't fear slow recovery." },
+            { num: "375", zh: "今天依然值得努力活著。", en: "Today is still worth living for." },
+            { num: "376", zh: "願你的每一步，都更穩更踏實。", en: "May each step be firmer and steadier." },
+            { num: "377", zh: "每一天都有新的恩典等待你。", en: "New grace awaits you every day." },
+            { num: "378", zh: "今天先好好休息，再慢慢前進。", en: "Rest well first, then move forward slowly." },
+            { num: "379", zh: "願你的生命再次充滿光亮。", en: "May light fill your life again." },
+            { num: "380", zh: "不要停止相信未來。", en: "Keep believing in the future." },
+            { num: "381", zh: "今天依然有人關心你。", en: "People still care about you today." },
+            { num: "382", zh: "願你的心一直充滿盼望。", en: "May your heart always hold hope." },
+            { num: "383", zh: "每一次醒來，都是新的禮物。", en: "Every awakening is a new gift." },
+            { num: "384", zh: "今天也有值得開心的小事。", en: "Today has small joys." },
+            { num: "385", zh: "願你的心重新充滿喜樂。", en: "May joy fill your heart again." },
+            { num: "386", zh: "不要讓昨天的痛苦偷走今天。", en: "Yesterday's pain shouldn't steal today." },
+            { num: "387", zh: "今天請為自己加油。", en: "Cheer yourself on today." },
+            { num: "388", zh: "願你的生命一天一天更健康。", en: "May your life grow healthier daily." },
+            { num: "389", zh: "每一次相信，都在滋養生命。", en: "Every belief nourishes life." },
+            { num: "390", zh: "今天依然值得微笑。", en: "Today deserves your smile." },
+            { num: "391", zh: "願你的心比風雨更堅定。", en: "May your heart be steadier than storms." },
+            { num: "392", zh: "不要害怕等待康復的季節。", en: "Don't fear waiting for recovery's season." },
+            { num: "393", zh: "今天就是希望開始的一天。", en: "Today is where hope begins." },
+            { num: "394", zh: "願你的生命一直向著光前進。", en: "May your life always move toward light." },
+            { num: "395", zh: "每一天都是新的恩典。", en: "Every day is new grace." },
+            { num: "396", zh: "今天請相信，一切都會慢慢變好。", en: "Things will slowly get better." },
+            { num: "397", zh: "願你的心常有平安。", en: "May peace always grace your heart." },
+            { num: "398", zh: "不要停止愛自己。", en: "Never stop loving yourself." },
+            { num: "399", zh: "今天仍然充滿希望。", en: "Today is still full of hope." },
+            { num: "400", zh: "願平安、勇氣、盼望與愛，陪伴你走過每一天。", en: "May peace, courage, hope, and love accompany every day." },
+            { num: "401", zh: "今天的你，不需要完美，只需要被好好照顧。", en: "You need care today, not perfection." },
+            { num: "402", zh: "願你的心，比身體更早恢復平安。", en: "May your heart heal before your body." },
+            { num: "403", zh: "不要因為現在辛苦，就否定未來。", en: "Today's hardship doesn't negate tomorrow's good." },
+            { num: "404", zh: "每一天，都有重新燃起希望的機會。", en: "Every day offers a chance to rekindle hope." },
+            { num: "405", zh: "你的生命，不是由病歷決定。", en: "Your life isn't defined by medical records." },
+            { num: "406", zh: "今天先照亮自己的心。", en: "Light your own heart today." },
+            { num: "407", zh: "願你的勇氣，一天比一天多。", en: "May courage grow each day." },
+            { num: "408", zh: "不要害怕慢慢好起來。", en: "Don't fear gradual healing." },
+            { num: "409", zh: "今天仍然值得期待。", en: "Today is still worth anticipating." },
+            { num: "410", zh: "每一次安靜休息，都在累積恢復的力量。", en: "Silent rest accumulates healing power." },
+            { num: "411", zh: "願你的心，不被擔憂綁住。", en: "May worry not bind your heart." },
+            { num: "412", zh: "今天請相信，生命正在努力修復。", en: "Life is working to repair itself." },
+            { num: "413", zh: "不要低估一個充滿希望的今天。", en: "Don't underestimate a hopeful today." },
+            { num: "414", zh: "每一個微小的改善，都值得感謝。", en: "Every tiny improvement deserves gratitude." },
+            { num: "415", zh: "願你在等待中，依然保有笑容。", en: "May you smile while waiting." },
+            { num: "416", zh: "今天比昨天，更靠近明天的健康。", en: "Closer to tomorrow's health today." },
+            { num: "417", zh: "不要讓疾病奪走你的夢想。", en: "Don't let illness take your dreams." },
+            { num: "418", zh: "願你的心，永遠保有光亮。", en: "May light always remain in your heart." },
+            { num: "419", zh: "今天先照顧好自己，其餘交給時間。", en: "Care for yourself; let time handle the rest." },
+            { num: "420", zh: "每一天都是新的禮物。", en: "Every day is a new gift." },
+            { num: "421", zh: "願你一直相信，愛比恐懼更有力量。", en: "Love is always more powerful than fear." },
+            { num: "422", zh: "今天依然可以重新開始。", en: "You can still start fresh today." },
+            { num: "423", zh: "不要因為疲累，就停止相信希望。", en: "Tiredness shouldn't stop you believing in hope." },
+            { num: "424", zh: "願你的心越來越安穩。", en: "May your heart grow steadier." },
+            { num: "425", zh: "今天就是最值得珍惜的一天。", en: "Today is most worth treasuring." },
+            { num: "426", zh: "每一次呼吸，都在見證生命的堅強。", en: "Every breath witnesses life's strength." },
+            { num: "427", zh: "願你的心，不再孤單。", en: "May your heart never be lonely." },
+            { num: "428", zh: "今天請對自己溫柔一些。", en: "Be kinder to yourself today." },
+            { num: "429", zh: "不要害怕需要別人的陪伴。", en: "Don't fear needing companionship." },
+            { num: "430", zh: "願你的生命慢慢找回節奏。", en: "May your life find its rhythm again." },
+            { num: "431", zh: "今天也是值得感恩的一天。", en: "Today is worth being grateful for." },
+            { num: "432", zh: "每一次休息，都不是浪費。", en: "Rest is never wasted." },
+            { num: "433", zh: "願你的心，重新充滿盼望。", en: "May hope fill your heart again." },
+            { num: "434", zh: "今天請相信，困難不是永遠。", en: "Difficulty is not forever." },
+            { num: "435", zh: "不要停止期待好消息。", en: "Keep expecting good news." },
+            { num: "436", zh: "願你的生命一天一天恢復光彩。", en: "May your life regain shine daily." },
+            { num: "437", zh: "今天依然充滿可能。", en: "Today still holds possibility." },
+            { num: "438", zh: "每一份耐心，都在孕育新的力量。", en: "Every patience births new strength." },
+            { num: "439", zh: "願你的眼中，再次充滿笑意。", en: "May your eyes shine with laughter again." },
+            { num: "440", zh: "今天先活在希望裡。", en: "Live in hope today." },
+            { num: "441", zh: "不要讓憂慮住進今天。", en: "Don't let worry into today." },
+            { num: "442", zh: "願你的心越來越自由。", en: "May your heart grow freer." },
+            { num: "443", zh: "今天也是值得勇敢的一天。", en: "Today is worth being brave." },
+            { num: "444", zh: "每一步都算數。", en: "Every step counts." },
+            { num: "445", zh: "願你的生命比昨天更有力量。", en: "May your life be stronger than yesterday." },
+            { num: "446", zh: "今天請好好睡一覺。", en: "Sleep well today." },
+            { num: "447", zh: "不要急著看見全部答案。", en: "Don't rush to see all answers." },
+            { num: "448", zh: "願你的每一天都有新的鼓勵。", en: "May each day bring new encouragement." },
+            { num: "449", zh: "今天依然可以選擇相信。", en: "You can still choose to believe." },
+            { num: "450", zh: "每一個明天，都值得期待。", en: "Every tomorrow deserves anticipation." },
+            { num: "451", zh: "願你的心重新充滿溫暖。", en: "May warmth return to your heart." },
+            { num: "452", zh: "今天也請記得照顧自己的情緒。", en: "Care for your emotions today." },
+            { num: "453", zh: "不要讓害怕蓋過希望。", en: "Don't let fear cover hope." },
+            { num: "454", zh: "願你的生命充滿新的開始。", en: "May new beginnings fill your life." },
+            { num: "455", zh: "今天比昨天更堅強。", en: "Stronger than yesterday." },
+            { num: "456", zh: "每一次堅持，都沒有白費。", en: "No persistence is ever wasted." },
+            { num: "457", zh: "願你的心，找到真正的安息。", en: "May your heart find true rest." },
+            { num: "458", zh: "今天依然有人掛念著你。", en: "Someone is still thinking of you." },
+            { num: "459", zh: "不要忘記，你一直都很珍貴。", en: "You've always been precious." },
+            { num: "460", zh: "願你的生命再次開花。", en: "May your life bloom again." },
+            { num: "461", zh: "今天先相信，再慢慢看見。", en: "Believe first, then slowly see." },
+            { num: "462", zh: "每一天都可以重新選擇希望。", en: "Choose hope anew each day." },
+            { num: "463", zh: "願你的心，一直保持柔軟。", en: "Keep your heart soft." },
+            { num: "464", zh: "今天請把自己放在重要的位置。", en: "Put yourself in an important place today." },
+            { num: "465", zh: "不要停止愛自己。", en: "Never stop loving yourself." },
+            { num: "466", zh: "願你的勇敢，成為明天的祝福。", en: "May your courage bless tomorrow." },
+            { num: "467", zh: "今天依然有值得微笑的理由。", en: "Reasons to smile still exist today." },
+            { num: "468", zh: "每一個小進步，都是生命的禮物。", en: "Every small progress is a gift of life." },
+            { num: "469", zh: "願你的心一天比一天更明亮。", en: "May your heart brighten each day." },
+            { num: "470", zh: "今天請相信，你沒有白白努力。", en: "Your effort wasn't wasted." },
+            { num: "471", zh: "不要放棄等待春天。", en: "Keep waiting for spring." },
+            { num: "472", zh: "願你的生命再次充滿活力。", en: "May vitality return to your life." },
+            { num: "473", zh: "今天就是新的起點。", en: "Today is a new starting point." },
+            { num: "474", zh: "每一次相信，都讓希望更真實。", en: "Every belief makes hope more real." },
+            { num: "475", zh: "願你的心，比昨天更平靜。", en: "May your heart be calmer today." },
+            { num: "476", zh: "今天依然值得好好生活。", en: "Today deserves good living." },
+            { num: "477", zh: "不要忘記，你不是一個人在走。", en: "You're not walking alone." },
+            { num: "478", zh: "願你的每一天都充滿新的恩典。", en: "May each day be full of new grace." },
+            { num: "479", zh: "今天請相信，美好仍在路上。", en: "Beauty is still on the way." },
+            { num: "480", zh: "每一次醒來，都是新的邀請。", en: "Every awakening is a new invitation." },
+            { num: "481", zh: "願你的生命再次找到喜樂。", en: "May joy find your life again." },
+            { num: "482", zh: "今天依然有光。", en: "There's still light today." },
+            { num: "483", zh: "不要害怕未知的明天。", en: "Don't fear tomorrow's unknowns." },
+            { num: "484", zh: "願你的心重新得著力量。", en: "May strength return to your heart." },
+            { num: "485", zh: "今天先走一步就好。", en: "Just take one step today." },
+            { num: "486", zh: "每一份關心，都能溫暖生命。", en: "Every care warms life." },
+            { num: "487", zh: "願你的生命越來越有盼望。", en: "May hope grow in your life." },
+            { num: "488", zh: "今天依然是值得感恩的一天。", en: "Today deserves gratitude." },
+            { num: "489", zh: "不要讓絕望有最後一句話。", en: "Don't let despair have the final word." },
+            { num: "490", zh: "願你的心始終充滿勇氣。", en: "May courage always fill your heart." },
+            { num: "491", zh: "今天請相信，你正在慢慢變好。", en: "You're slowly getting better." },
+            { num: "492", zh: "每一次微笑，都在療癒自己。", en: "Every smile heals you." },
+            { num: "493", zh: "願你的生命充滿平安。", en: "May peace fill your life." },
+            { num: "494", zh: "今天比昨天更多一點希望。", en: "More hope today than yesterday." },
+            { num: "495", zh: "不要停止相信生命的美麗。", en: "Keep believing in life's beauty." },
+            { num: "496", zh: "願你的心，始終向著光。", en: "May your heart always face the light." },
+            { num: "497", zh: "今天也請相信未來。", en: "Believe in the future today." },
+            { num: "498", zh: "每一天都是新的恩典。", en: "Every day is new grace." },
+            { num: "499", zh: "願你的故事，寫滿希望而不是害怕。", en: "May your story be written in hope, not fear." },
+            { num: "500", zh: "願愛、平安、盼望與勇氣，陪伴你走向康復的每一步。", en: "May love, peace, hope, and courage guide every step to recovery." }
+        ];
+        
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const quotesContainer = document.getElementById('quotesContainer');
+        const statsDiv = document.getElementById('stats');
+        
+        let currentFilter = 'all';
+        let expandedCards = new Set();
+        
+        // Filter range check
+        function isInRange(num) {
+            const numInt = parseInt(num);
+            if (currentFilter === 'all') return true;
+            const [start, end] = currentFilter.split('-').map(Number);
+            return numInt >= start && numInt <= end;
+        }
+        
+        // Search filter
+        function matchesSearch(quote, searchTerm) {
+            if (!searchTerm) return true;
+            const lower = searchTerm.toLowerCase();
+            return quote.zh.toLowerCase().includes(lower) || 
+                   quote.en.toLowerCase().includes(lower);
+        }
+        
+        // Render quotes
+        function renderQuotes() {
+            quotesContainer.innerHTML = '';
+            const filteredQuotes = quotesData.filter(q => 
+                isInRange(q.num) && matchesSearch(q, searchInput.value)
+            );
+            
+            filteredQuotes.forEach(quote => {
+                const card = document.createElement('div');
+                card.className = 'quote-card';
+                if (expandedCards.has(quote.num)) {
+                    card.classList.add('expanded');
+                }
+                
+                card.innerHTML = `
+                    <div class="quote-number">#${quote.num} <span class="expand-icon">▼</span></div>
+                    <div class="quote-content">
+                        <div class="quote-chinese">${quote.zh}</div>
+                        <div class="quote-english">"${quote.en}"</div>
+                    </div>
+                    <div class="quote-actions">
+                        <button class="tts-btn" onclick="speakChinese('${quote.zh.replace(/'/g, "\\'")}', this)">
+                            🔊 中文
+                        </button>
+                        <button class="tts-btn" onclick="speakEnglish('${quote.en.replace(/'/g, "\\'")}', this)">
+                            🔊 English
+                        </button>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.tts-btn')) {
+                        if (expandedCards.has(quote.num)) {
+                            expandedCards.delete(quote.num);
+                        } else {
+                            expandedCards.add(quote.num);
+                        }
+                        renderQuotes();
+                    }
+                });
+                
+                quotesContainer.appendChild(card);
+            });
+            
+            statsDiv.textContent = `显示 ${filteredQuotes.length} / ${quotesData.length} 金句 | Showing ${filteredQuotes.length} / ${quotesData.length} quotes`;
+        }
+        
+        // Text-to-speech Chinese
+        window.speakChinese = function(text, btn) {
+            if (!('speechSynthesis' in window)) {
+                alert('你的瀏覽器不支持語音功能\nYour browser does not support speech synthesis');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            btn.classList.add('playing');
+            btn.textContent = '🔊 中文 (播放中...)';
+            
+            utterance.onend = () => {
+                btn.classList.remove('playing');
+                btn.textContent = '🔊 中文';
+            };
+            
+            utterance.onerror = (e) => {
+                console.error('Speech error:', e);
+                btn.classList.remove('playing');
+                btn.textContent = '🔊 中文 (失敗)';
+                setTimeout(() => { btn.textContent = '🔊 中文'; }, 2000);
+            };
+            
+            window.speechSynthesis.cancel();
+            setTimeout(() => {
+                window.speechSynthesis.speak(utterance);
+            }, 100);
+        };
+        
+        // Text-to-speech English
+        window.speakEnglish = function(text, btn) {
+            if (!('speechSynthesis' in window)) {
+                alert('Your browser does not support speech synthesis\n你的瀏覽器不支持語音功能');
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            btn.classList.add('playing');
+            btn.textContent = '🔊 English (Playing...)';
+            
+            utterance.onend = () => {
+                btn.classList.remove('playing');
+                btn.textContent = '🔊 English';
+            };
+            
+            utterance.onerror = (e) => {
+                console.error('Speech error:', e);
+                btn.classList.remove('playing');
+                btn.textContent = '🔊 English (Failed)';
+                setTimeout(() => { btn.textContent = '🔊 English'; }, 2000);
+            };
+            
+            window.speechSynthesis.cancel();
+            setTimeout(() => {
+                window.speechSynthesis.speak(utterance);
+            }, 100);
+        };
+        
+        // Event listeners
+        searchInput.addEventListener('input', renderQuotes);
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.range;
+                expandedCards.clear();
+                renderQuotes();
+            });
+        });
+        
+        // Initial render
+        renderQuotes();
+    </script>
+</body>
+</html>
